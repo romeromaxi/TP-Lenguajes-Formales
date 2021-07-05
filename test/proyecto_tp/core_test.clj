@@ -18,5 +18,18 @@
     (is (= false (cadena? "Hola")))
     (is (= false (cadena? "'Hola")))
     (is (= false (cadena? 'Hola)))
+    (is (= true (cadena? "'Pruebaconunacadenamaslarga'")))
+  )
+)
+
+(deftest palabra-reservada?-test
+  (testing "Prueba de la funcion: palabra-reservada?"
+    (is (= false (palabra-reservada? nil)))
+    (is (= true (palabra-reservada? 'CALL)))
+    (is (= true (palabra-reservada? "CALL")))
+    (is (= false (palabra-reservada? 'ASIGNAR)))
+    (is (= false (palabra-reservada? "ASIGNAR")))
+    (is (= false (palabra-reservada? '1)))
+    (is (= false (palabra-reservada? true)))
   )
 )

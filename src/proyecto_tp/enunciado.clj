@@ -699,7 +699,10 @@
 ; false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn palabra-reservada? [x]
-  (some #(= % x) (re-seq #"\w+" "CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE"))
+  (if 
+      (or (nil? x) (number? x) (boolean? x)) false 
+      (true? (some #(= % (clojure.string/upper-case (name x))) '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE")))
+  )
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
