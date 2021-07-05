@@ -65,6 +65,9 @@
 (declare aplicar-relacional)
 (declare dump)
 
+(declare lista-palabras-reservadas)
+(declare es-numero-como-caracter?)
+
 ; (defn spy
 ;   ([x] (do (prn x) x))
 ;   ([msg x] (do (print msg) (print ": ") (prn x) x))
@@ -701,7 +704,7 @@
 (defn palabra-reservada? [x]
   (if 
       (or (nil? x) (number? x) (boolean? x)) false 
-      (true? (some #(= % (clojure.string/upper-case (name x))) '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE")))
+      (true? (some #(= % (clojure.string/upper-case (name x))) lista-palabras-reservadas))
   )
 )
 
@@ -717,6 +720,11 @@
 ; false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn identificador? [x]
+  (cond 
+    (or (nil? x) (number? x) (boolean? x)) false 
+    (es-numero-como-caracter? (first (name x))) false
+    :else (not (palabra-reservada? x))
+  )
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -984,6 +992,21 @@
 ; [nil () [] :sin-errores [[0] [[X VAR 0]]] 1 [MUL ADD NEG]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn generar-signo [amb signo]
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; LAS FUNCIONES QUE SIGUEN SON AUXILIARES USADAS PARA ORGANIZAR EL CODIGO
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Devuelve lista de todas las palabras reserevadas en PL/0
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(def lista-palabras-reservadas 
+  '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE")
+)
+
+(defn es-numero-como-caracter? [x]
+  (true? (some #(= % (str x)) (map str '(0 1 2 3 4 5 6 7 8 9))))
 )
 
 true
