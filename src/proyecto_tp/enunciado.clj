@@ -69,6 +69,8 @@
 (declare es-numero-como-caracter?)
 (declare no-es-string?)
 (declare contiene-simbolos?)
+(declare ultimos-dos-elementos-numericos?)
+(declare es-operador-aritmetico-diadico?)
 
 ; (defn spy
 ;   ([x] (do (prn x) x))
@@ -873,6 +875,13 @@
 ; [a b c]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn aplicar-aritmetico [op pila]
+  (cond
+    (not (vector? pila)) pila
+    (< (count pila) 2) pila
+    (not (ultimos-dos-elementos-numericos? pila)) pila
+    (not (es-operador-aritmetico-diadico? op)) pila
+    :else (conj (pop (pop pila)) (int (op (nth pila (- (count pila) 2)) (nth pila (dec (count pila))))))
+  )
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1008,6 +1017,10 @@
   '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE")
 )
 
+(def vector-op-aritmeticas-diadicas 
+  [+ - * /]
+)
+
 (defn es-numero-como-caracter? [x]
   (true? (some #(= % (str x)) (map str '(0 1 2 3 4 5 6 7 8 9))))
 )
@@ -1021,6 +1034,17 @@
     (no-es-string? x) false
       (not (nil? (re-seq #"\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\+|\!|\"|\#|\$|\%|\&|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (name x))))
   )
+)
+
+(defn ultimos-dos-elementos-numericos? [lst]
+  (if
+    (or (nil? lst) (< (count lst) 2)) false
+      (every? number? (nthnext lst (- (count lst) 2)))
+  )
+)
+
+(defn es-operador-aritmetico-diadico? [op]
+  (true? (some (partial = op) vector-op-aritmeticas-diadicas))
 )
 
 true

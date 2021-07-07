@@ -64,6 +64,25 @@
   )
 )
 
+(deftest aplicar-aritmetico-test
+  (testing "Prueba de la funcion: aplicar-aritmetico"
+    (is (= [3] (aplicar-aritmetico + [1 2])))
+    (is (= [1 3] (aplicar-aritmetico - [1 4 1])))
+    (is (= [1 8] (aplicar-aritmetico * [1 2 4])))
+    (is (= [1 0] (aplicar-aritmetico / [1 2 4])))
+    (is (= nil (aplicar-aritmetico + nil)))
+    (is (= [] (aplicar-aritmetico + [])))
+    (is (= [1] (aplicar-aritmetico + [1])))
+    (is (= [1 2 4] (aplicar-aritmetico 'hola [1 2 4])))
+    (is (= [1 2 4] (aplicar-aritmetico count [1 2 4])))
+    (is (= '[a b c] (aplicar-aritmetico + '[a b c])))
+    (is (= '[1 4 1 a] (aplicar-aritmetico - '[1 4 1 a])))
+    (is (= '[9 8 K 0] (aplicar-aritmetico + '[9 8 K 0])))
+    (is (= '#{a c b} (aplicar-aritmetico + (hash-set 'a 'b 'c))))
+    (is (= '(1 2 3 4) (aplicar-aritmetico * '(1 2 3 4))))
+  )
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; TEST FUNCIONES AUXILIARES 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -82,5 +101,30 @@
     (is (= true (contiene-simbolos? "Cont#ene")))
     (is (= true (contiene-simbolos? '%principio)))
     (is (= true (contiene-simbolos? "v:a>r=i{o$s;")))
+  )
+)
+
+(deftest ultimos-dos-elementos-numericos?-test
+  (testing "Prueba de la funcion: ultimos-dos-elementos-numericos?"
+    (is (= true (ultimos-dos-elementos-numericos? [1 2 3 4 5 6])))
+    (is (= false (ultimos-dos-elementos-numericos? '[1 2 3 4 5 6 a])))
+    (is (= false (ultimos-dos-elementos-numericos? '[1 2 K 3])))
+    (is (= false (ultimos-dos-elementos-numericos? nil)))
+    (is (= false (ultimos-dos-elementos-numericos? [])))
+    (is (= false (ultimos-dos-elementos-numericos? [1])))
+    (is (= true (ultimos-dos-elementos-numericos? '[a b c d e f g h i 14 13])))
+  )
+)
+
+(deftest es-operador-aritmetico-diadico?-test
+  (testing "Prueba de la funcion: es-operador-aritmetico-diadico?"
+    (is (= true (es-operador-aritmetico-diadico? +)))
+    (is (= true (es-operador-aritmetico-diadico? -)))
+    (is (= true (es-operador-aritmetico-diadico? *)))
+    (is (= true (es-operador-aritmetico-diadico? /)))
+    (is (= false (es-operador-aritmetico-diadico? max)))
+    (is (= false (es-operador-aritmetico-diadico? inc)))
+    (is (= false (es-operador-aritmetico-diadico? count)))
+    (is (= false (es-operador-aritmetico-diadico? map)))
   )
 )
