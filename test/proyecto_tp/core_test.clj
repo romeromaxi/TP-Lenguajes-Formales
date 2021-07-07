@@ -117,6 +117,17 @@
   )
 )
 
+(deftest no-es-string?-test
+  (testing "Prueba de la funcion: no-es-string?"
+    (is (= true (no-es-string? true)))
+    (is (= true (no-es-string? 123)))
+    (is (= false (no-es-string? "Cadena")))
+    (is (= false (no-es-string? 'string)))
+    (is (= true (no-es-string? nil)))
+    (is (= true (no-es-string? '5)))
+  )
+)
+
 (deftest contiene-simbolos?-test
   (testing "Prueba de la funcion: contiene-simbolos?"
     (is (= false (contiene-simbolos? nil)))
@@ -149,5 +160,21 @@
     (is (= false (es-operador-aritmetico-diadico? inc)))
     (is (= false (es-operador-aritmetico-diadico? count)))
     (is (= false (es-operador-aritmetico-diadico? map)))
+    (is (= false (es-operador-aritmetico-diadico? >)))
+  )
+)
+
+(deftest es-operador-relacional?-test
+  (testing "Prueba de la funcion: es-operador-relacional?"
+    (is (= true (es-operador-relacional? =)))
+    (is (= true (es-operador-relacional? not=)))
+    (is (= true (es-operador-relacional? <)))
+    (is (= true (es-operador-relacional? <=)))
+    (is (= true (es-operador-relacional? >)))
+    (is (= true (es-operador-relacional? >=)))
+    (is (= false (es-operador-relacional? +)))
+    (is (= false (es-operador-relacional? -)))
+    (is (= false (es-operador-relacional? max)))
+    (is (= false (es-operador-relacional? inc)))
   )
 )
