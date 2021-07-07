@@ -67,6 +67,8 @@
 
 (declare lista-palabras-reservadas)
 (declare es-numero-como-caracter?)
+(declare no-es-string?)
+(declare contiene-simbolos?)
 
 ; (defn spy
 ;   ([x] (do (prn x) x))
@@ -723,6 +725,7 @@
   (cond 
     (or (nil? x) (number? x) (boolean? x)) false 
     (es-numero-como-caracter? (first (name x))) false
+    (contiene-simbolos? x) false
     :else (not (palabra-reservada? x))
   )
 )
@@ -1007,6 +1010,17 @@
 
 (defn es-numero-como-caracter? [x]
   (true? (some #(= % (str x)) (map str '(0 1 2 3 4 5 6 7 8 9))))
+)
+
+(defn no-es-string? [x]
+  (or (nil? x) (number? x) (boolean? x))  
+)
+
+(defn contiene-simbolos? [x]
+  (if
+    (no-es-string? x) false
+      (not (nil? (re-seq #"\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\+|\!|\"|\#|\$|\%|\&|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (name x))))
+  )
 )
 
 true

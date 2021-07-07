@@ -58,7 +58,9 @@
     (is (= true (identificador? "V2")))
     (is (= false (identificador? 'CALL)))
     (is (= false (identificador? "CALL")))
-    (is (= false (identificador? "#CALL")))
+    (is (= false (identificador? "#WHILE")))
+    (is (= false (identificador? "V:2")))
+    (is (= false (identificador? "procedure")))
   )
 )
 
@@ -70,5 +72,15 @@
     (is (= false (es-numero-como-caracter? nil)))
     (is (= true (es-numero-como-caracter? "2")))
     (is (= true (es-numero-como-caracter? \2)))
+  )
+)
+
+(deftest contiene-simbolos?-test
+  (testing "Prueba de la funcion: contiene-simbolos?"
+    (is (= false (contiene-simbolos? nil)))
+    (is (= false (contiene-simbolos? "CadenaSinSimbolos")))
+    (is (= true (contiene-simbolos? "Cont#ene")))
+    (is (= true (contiene-simbolos? '%principio)))
+    (is (= true (contiene-simbolos? "v:a>r=i{o$s;")))
   )
 )
