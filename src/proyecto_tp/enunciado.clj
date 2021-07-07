@@ -66,13 +66,16 @@
 (declare dump)
 
 (declare lista-palabras-reservadas)
+(declare vector-op-aritmeticas-diadicas)
+(declare vector-op-relacionales)
+(declare hash-map-boolean)
+
 (declare es-numero-como-caracter?)
 (declare no-es-string?)
 (declare contiene-simbolos?)
 (declare ultimos-dos-elementos-numericos?)
 (declare es-operador-aritmetico-diadico?)
 (declare es-operador-relacional?)
-(declare hash-map-boolean)
 
 ; (defn spy
 ;   ([x] (do (prn x) x))
@@ -1042,7 +1045,7 @@
 )
 
 (defn es-numero-como-caracter? [x]
-  (true? (some #(= % (str x)) (map str '(0 1 2 3 4 5 6 7 8 9))))
+  (true? (some (partial = (str x)) (map str '(0 1 2 3 4 5 6 7 8 9))))
 )
 
 (defn no-es-string? [x]
