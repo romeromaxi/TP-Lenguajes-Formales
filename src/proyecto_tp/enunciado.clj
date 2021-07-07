@@ -71,6 +71,8 @@
 (declare contiene-simbolos?)
 (declare ultimos-dos-elementos-numericos?)
 (declare es-operador-aritmetico-diadico?)
+(declare es-operador-relacional?)
+(declare hash-map-boolean)
 
 ; (defn spy
 ;   ([x] (do (prn x) x))
@@ -905,6 +907,13 @@
 ; [a b c]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn aplicar-relacional [op pila]
+  (cond
+    (not (vector? pila)) pila
+    (< (count pila) 2) pila
+    (not (ultimos-dos-elementos-numericos? pila)) pila
+    (not (es-operador-relacional? op)) pila
+    :else (conj (pop (pop pila)) (hash-map-boolean (op (nth pila (- (count pila) 2)) (nth pila (dec (count pila))))))
+  )
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1021,6 +1030,17 @@
   [+ - * /]
 )
 
+(def vector-op-relacionales 
+  [= not= < <= > >=]
+)
+
+(def hash-map-boolean 
+  {
+    false 0
+    true 1
+  }
+)
+
 (defn es-numero-como-caracter? [x]
   (true? (some #(= % (str x)) (map str '(0 1 2 3 4 5 6 7 8 9))))
 )
@@ -1045,6 +1065,10 @@
 
 (defn es-operador-aritmetico-diadico? [op]
   (true? (some (partial = op) vector-op-aritmeticas-diadicas))
+)
+
+(defn es-operador-relacional? [op]
+  (true? (some (partial = op) vector-op-relacionales))
 )
 
 true

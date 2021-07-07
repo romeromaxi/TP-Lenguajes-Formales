@@ -83,6 +83,29 @@
   )
 )
 
+(deftest aplicar-relacional-test
+  (testing "Prueba de la funcion: aplicar-relacional"
+    (is (= [1] (aplicar-relacional > [7 5])))
+    (is (= [4 1] (aplicar-relacional > [4 7 5])))
+    (is (= [4 0] (aplicar-relacional = [4 7 5])))
+    (is (= [4 1] (aplicar-relacional not= [4 7 5])))
+    (is (= [4 0] (aplicar-relacional < [4 7 5])))
+    (is (= [4 1] (aplicar-relacional <= [4 6 6])))
+    (is (= '[a b c] (aplicar-relacional <= '[a b c])))
+    (is (= nil (aplicar-relacional = nil)))
+    (is (= [1 2 4] (aplicar-relacional / [1 2 4])))
+    (is (= [] (aplicar-relacional > [])))
+    (is (= [1] (aplicar-relacional not= [1])))
+    (is (= [1 2 4] (aplicar-relacional 'hola [1 2 4])))
+    (is (= [1 2 4] (aplicar-relacional count [1 2 4])))
+    (is (= '#{a c b} (aplicar-relacional < (hash-set 'a 'b 'c))))
+    (is (= '[1 4 1 a] (aplicar-relacional = '[1 4 1 a])))
+    (is (= '[9 8 K 0] (aplicar-relacional = '[9 8 K 0])))
+    (is (= '(1 2 3 4) (aplicar-relacional > '(1 2 3 4))))
+
+  )
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; TEST FUNCIONES AUXILIARES 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
