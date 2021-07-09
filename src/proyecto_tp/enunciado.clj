@@ -960,8 +960,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn generar 
   ([amb instr]
+    (if (= (estado amb) :sin-errores)
+      (assoc amb 6 (conj (bytecode amb) instr))      
+      amb)
   )
   ([amb instr val]
+    (if (= (estado amb) :sin-errores)
+      (assoc amb 6 (conj (bytecode amb) (vector instr val)))      
+      amb)
   )
 )
 
