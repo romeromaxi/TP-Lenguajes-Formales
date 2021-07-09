@@ -115,6 +115,16 @@
   )
 )
 
+(deftest generar-signo-test
+  (testing "Prueba de la funcion: generar-signo"
+    (is (= '[nil () [] :error [[0] [[X VAR 0]]] 1 [MUL ADD]] (generar-signo [nil () [] :error '[[0] [[X VAR 0]]] 1 '[MUL ADD]] '-)))
+    (is (= '[nil () [] :error [[0] [[X VAR 0]]] 1 [MUL ADD]] (generar-signo [nil () [] :error '[[0] [[X VAR 0]]] 1 '[MUL ADD]] '+)))
+    (is (= '[nil () [] :sin-errores [[0] [[X VAR 0]]] 1 [MUL ADD]] (generar-signo [nil () [] :sin-errores '[[0] [[X VAR 0]]] 1 '[MUL ADD]] '+)))
+    (is (= '[nil () [] :sin-errores [[0] [[X VAR 0]]] 1 [MUL ADD]] (generar-signo [nil () [] :sin-errores '[[0] [[X VAR 0]]] 1 '[MUL ADD]] '*)))
+    (is (= '[nil () [] :sin-errores [[0] [[X VAR 0]]] 1 [MUL ADD NEG]] (generar-signo [nil () [] :sin-errores '[[0] [[X VAR 0]]] 1 '[MUL ADD]] '-)))
+  )
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; TEST FUNCIONES AUXILIARES 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -187,3 +197,13 @@
     (is (= false (es-operador-relacional? inc)))
   )
 )
+
+(deftest es-operador-monadico-de-signo?-test
+  (testing "Prueba de la funcion: es-operador-monadico-de-signo?"
+    (is (= true (es-operador-monadico-de-signo? '+)))
+    (is (= true (es-operador-monadico-de-signo? '-)))
+    (is (= false (es-operador-monadico-de-signo? '*)))
+    (is (= false (es-operador-monadico-de-signo? '/)))
+  )
+)
+
