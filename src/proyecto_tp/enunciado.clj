@@ -77,6 +77,7 @@
 (declare es-operador-aritmetico-diadico?)
 (declare es-operador-relacional?)
 (declare es-operador-monadico-de-signo?)
+(declare es-operador-monadico-signo-negativo?)
 
 ; (defn spy
 ;   ([x] (do (prn x) x))
@@ -1028,7 +1029,7 @@
 ; [nil () [] :sin-errores [[0] [[X VAR 0]]] 1 [MUL ADD NEG]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn generar-signo [amb signo]
-  (if (and (= (estado amb) :sin-errores) (es-operador-monadico-de-signo? signo) (= (name signo) "-"))
+  (if (and (= (estado amb) :sin-errores) (es-operador-monadico-de-signo? signo) (es-operador-monadico-signo-negativo? signo))
     (assoc amb 6 (conj (bytecode amb) 'NEG))      
     amb)
 )
@@ -1090,7 +1091,19 @@
 )
 
 (defn es-operador-monadico-de-signo? [op]
-  (or (= (name op) "+") (= (name op) "-"))  
+  (cond
+    (or (symbol? op) (string? op)) (or (= (name op) "+") (= (name op) "-")) 
+    (fn? op) (or (= op +) (= op -)) 
+    :else false
+  )
+)
+
+(defn es-operador-monadico-signo-negativo? [op]
+  (cond
+    (or (symbol? op) (string? op)) (= (name op) "-")
+    (fn? op) (= op -)
+    :else false
+  )
 )
 
 true

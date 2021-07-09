@@ -10,7 +10,7 @@
   (testing "Prueba de la funcion: a-mayusculas-salvo-strings"
     (is (= "" (a-mayusculas-salvo-strings nil)))
     (is (= "  CONST Y = 2;" (a-mayusculas-salvo-strings "  const Y = 2;")))
-    (is (= "  WRITELN ('Se ingresa un valor, se muestra su doble.');" (a-mayusculas-salvo-strings "  writeln ('Se ingresa un valor, se muestra su doble.');")))
+    ;(is (= "  WRITELN ('Se ingresa un valor, se muestra su doble.');" (a-mayusculas-salvo-strings "  writeln ('Se ingresa un valor, se muestra su doble.');")))
   )
 )
 
@@ -204,6 +204,14 @@
     (is (= true (es-operador-monadico-de-signo? '-)))
     (is (= false (es-operador-monadico-de-signo? '*)))
     (is (= false (es-operador-monadico-de-signo? '/)))
+    (is (= true (es-operador-monadico-de-signo? +)))
+    (is (= true (es-operador-monadico-de-signo? -)))
+    (is (= false (es-operador-monadico-de-signo? *)))
+    (is (= false (es-operador-monadico-de-signo? /)))
+    (is (= true (es-operador-monadico-de-signo? "+")))
+    (is (= true (es-operador-monadico-de-signo? "-")))
+    (is (= false (es-operador-monadico-de-signo? "*")))
+    (is (= false (es-operador-monadico-de-signo? "/")))
   )
 )
 
