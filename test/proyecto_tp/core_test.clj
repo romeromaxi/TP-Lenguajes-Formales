@@ -180,6 +180,8 @@
     (is (= false (es-operador-aritmetico-diadico? count)))
     (is (= false (es-operador-aritmetico-diadico? map)))
     (is (= false (es-operador-aritmetico-diadico? >)))
+    (is (= true (es-operador-aritmetico-diadico? '+)))
+    (is (= true (es-operador-aritmetico-diadico? "*")))
   )
 )
 
@@ -195,6 +197,8 @@
     (is (= false (es-operador-relacional? -)))
     (is (= false (es-operador-relacional? max)))
     (is (= false (es-operador-relacional? inc)))
+    (is (= true (es-operador-relacional? 'not=)))
+    (is (= true (es-operador-relacional? ">=")))
   )
 )
 

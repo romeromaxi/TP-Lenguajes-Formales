@@ -1049,8 +1049,16 @@
   [+ - * /]
 )
 
+(def vector-op-aritmeticas-diadicas-strings
+  ["+" "-" "*" "/"]
+)
+
 (def vector-op-relacionales 
   [= not= < <= > >=]
+)
+
+(def vector-op-relacionales-strings 
+  ["=" "not=" "<" "<=" ">" ">="]
 )
 
 (def hash-map-boolean 
@@ -1083,11 +1091,19 @@
 )
 
 (defn es-operador-aritmetico-diadico? [op]
-  (true? (some (partial = op) vector-op-aritmeticas-diadicas))
+  (cond
+    (or (symbol? op) (string? op)) (true? (some (partial = (name op)) vector-op-aritmeticas-diadicas-strings))
+    (fn? op) (true? (some (partial = op) vector-op-aritmeticas-diadicas))
+    :else false
+  )
 )
 
 (defn es-operador-relacional? [op]
-  (true? (some (partial = op) vector-op-relacionales))
+  (cond
+    (or (symbol? op) (string? op)) (true? (some (partial = (name op)) vector-op-relacionales-strings))
+    (fn? op) (true? (some (partial = op) vector-op-relacionales))
+    :else false
+  )
 )
 
 (defn es-operador-monadico-de-signo? [op]
