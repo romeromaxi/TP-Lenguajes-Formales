@@ -125,6 +125,19 @@
   )
 )
 
+(deftest generar-operador-relacional-test
+  (testing "Prueba de la funcion: generar-operador-relacional"
+    (is (= '[WRITELN (END .) [] :error [[0 3] []] 6 [[JMP ?] [JMP ?] [CAL 1] RET]] (generar-operador-relacional ['WRITELN (list 'END (symbol ".")) [] :error [[0 3] []] 6 '[[JMP ?] [JMP ?] [CAL 1] RET]] '=)))
+    (is (= '[WRITELN (END .) [] :sin-errores [[0 3] []] 6 [[JMP ?] [JMP ?] [CAL 1] RET]] (generar-operador-relacional ['WRITELN (list 'END (symbol ".")) [] :sin-errores [[0 3] []] 6 '[[JMP ?] [JMP ?] [CAL 1] RET]] '+)))
+    (is (= '[WRITELN (END .) [] :sin-errores [[0 3] []] 6 [[JMP ?] [JMP ?] [CAL 1] RET EQ]] (generar-operador-relacional ['WRITELN (list 'END (symbol ".")) [] :sin-errores [[0 3] []] 6 '[[JMP ?] [JMP ?] [CAL 1] RET]] '=)))
+    (is (= '[WRITELN (END .) [] :sin-errores [[0 3] []] 6 [[JMP ?] [JMP ?] [CAL 1] RET GTE]] (generar-operador-relacional ['WRITELN (list 'END (symbol ".")) [] :sin-errores [[0 3] []] 6 '[[JMP ?] [JMP ?] [CAL 1] RET]] '>=)))
+    (is (= '[WRITELN (END .) [] :sin-errores [[0 3] []] 6 [[JMP ?] [JMP ?] [CAL 1] RET GT]] (generar-operador-relacional ['WRITELN (list 'END (symbol ".")) [] :sin-errores [[0 3] []] 6 '[[JMP ?] [JMP ?] [CAL 1] RET]] '>)))
+    (is (= '[WRITELN (END .) [] :sin-errores [[0 3] []] 6 [[JMP ?] [JMP ?] [CAL 1] RET LT]] (generar-operador-relacional ['WRITELN (list 'END (symbol ".")) [] :sin-errores [[0 3] []] 6 '[[JMP ?] [JMP ?] [CAL 1] RET]] '<)))
+    (is (= '[WRITELN (END .) [] :sin-errores [[0 3] []] 6 [[JMP ?] [JMP ?] [CAL 1] RET LTE]] (generar-operador-relacional ['WRITELN (list 'END (symbol ".")) [] :sin-errores [[0 3] []] 6 '[[JMP ?] [JMP ?] [CAL 1] RET]] '<=)))
+    (is (= '[WRITELN (END .) [] :sin-errores [[0 3] []] 6 [[JMP ?] [JMP ?] [CAL 1] RET NEQ]] (generar-operador-relacional ['WRITELN (list 'END (symbol ".")) [] :sin-errores [[0 3] []] 6 '[[JMP ?] [JMP ?] [CAL 1] RET]] '<>)))
+  )
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; TEST FUNCIONES AUXILIARES 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -185,20 +198,39 @@
   )
 )
 
-(deftest es-operador-relacional?-test
-  (testing "Prueba de la funcion: es-operador-relacional?"
-    (is (= true (es-operador-relacional? =)))
-    (is (= true (es-operador-relacional? not=)))
-    (is (= true (es-operador-relacional? <)))
-    (is (= true (es-operador-relacional? <=)))
-    (is (= true (es-operador-relacional? >)))
-    (is (= true (es-operador-relacional? >=)))
-    (is (= false (es-operador-relacional? +)))
-    (is (= false (es-operador-relacional? -)))
-    (is (= false (es-operador-relacional? max)))
-    (is (= false (es-operador-relacional? inc)))
-    (is (= true (es-operador-relacional? 'not=)))
-    (is (= true (es-operador-relacional? ">=")))
+(deftest es-operador-relacional-clojure?-test
+  (testing "Prueba de la funcion: es-operador-relacional-clojure?"
+    (is (= true (es-operador-relacional-clojure? =)))
+    (is (= true (es-operador-relacional-clojure? not=)))
+    (is (= true (es-operador-relacional-clojure? <)))
+    (is (= true (es-operador-relacional-clojure? <=)))
+    (is (= true (es-operador-relacional-clojure? >)))
+    (is (= true (es-operador-relacional-clojure? >=)))
+    (is (= false (es-operador-relacional-clojure? +)))
+    (is (= false (es-operador-relacional-clojure? -)))
+    (is (= false (es-operador-relacional-clojure? max)))
+    (is (= false (es-operador-relacional-clojure? inc)))
+    (is (= true (es-operador-relacional-clojure? 'not=)))
+    (is (= false (es-operador-relacional-clojure? '<>)))
+    (is (= true (es-operador-relacional-clojure? ">=")))
+  )
+)
+
+(deftest es-operador-relacional-pl0?-test
+  (testing "Prueba de la funcion: es-operador-relacional-pl0?"
+    (is (= true (es-operador-relacional-pl0? =)))
+    (is (= false (es-operador-relacional-pl0? not=)))
+    (is (= true (es-operador-relacional-pl0? <)))
+    (is (= true (es-operador-relacional-pl0? <=)))
+    (is (= true (es-operador-relacional-pl0? >)))
+    (is (= true (es-operador-relacional-pl0? >=)))
+    (is (= false (es-operador-relacional-pl0? +)))
+    (is (= false (es-operador-relacional-pl0? -)))
+    (is (= false (es-operador-relacional-pl0? max)))
+    (is (= false (es-operador-relacional-pl0? inc)))
+    (is (= false (es-operador-relacional-pl0? 'not=)))
+    (is (= true (es-operador-relacional-pl0? '<>)))
+    (is (= true (es-operador-relacional-pl0? ">=")))
   )
 )
 

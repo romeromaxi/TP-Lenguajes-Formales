@@ -67,15 +67,21 @@
 
 (declare lista-palabras-reservadas)
 (declare vector-op-aritmeticas-diadicas)
-(declare vector-op-relacionales)
+(declare vector-op-aritmeticas-diadicas-strings)
+(declare vector-op-relacionales-clojure)
+(declare vector-op-relacionales-clojure-strings)
+(declare vector-op-relacionales-pl0)
+(declare vector-op-relacionales-pl0-strings)
 (declare hash-map-boolean)
+(declare hash-map-op-relacionales-to-string)
 
 (declare es-numero-como-caracter?)
 (declare no-es-string?)
 (declare contiene-simbolos?)
 (declare ultimos-dos-elementos-numericos?)
 (declare es-operador-aritmetico-diadico?)
-(declare es-operador-relacional?)
+(declare es-operador-relacional-clojure?)
+(declare es-operador-relacional-pl0?)
 (declare es-operador-monadico-de-signo?)
 (declare es-operador-monadico-signo-negativo?)
 
@@ -916,7 +922,7 @@
     (not (vector? pila)) pila
     (< (count pila) 2) pila
     (not (ultimos-dos-elementos-numericos? pila)) pila
-    (not (es-operador-relacional? op)) pila
+    (not (es-operador-relacional-clojure? op)) pila
     :else (conj (pop (pop pila)) (hash-map-boolean (op (nth pila (- (count pila) 2)) (nth pila (dec (count pila))))))
   )
 )
@@ -1011,6 +1017,9 @@
 ; [WRITELN (END .) [] :sin-errores [[0 3] []] 6 [[JMP ?] [JMP ?] [CAL 1] RET GTE]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn generar-operador-relacional [amb operador]
+  (if (and (= (estado amb) :sin-errores) (es-operador-relacional-pl0? operador))
+    (assoc amb 6 (conj (bytecode amb) (hash-map-op-relacionales-to-string operador)))      
+    amb)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1053,18 +1062,48 @@
   ["+" "-" "*" "/"]
 )
 
-(def vector-op-relacionales 
+(def vector-op-relacionales-clojure 
   [= not= < <= > >=]
 )
 
-(def vector-op-relacionales-strings 
+(def vector-op-relacionales-clojure-strings 
   ["=" "not=" "<" "<=" ">" ">="]
+)
+
+(def vector-op-relacionales-pl0 
+  [= < <= > >=]
+)
+
+(def vector-op-relacionales-pl0-strings 
+  ["=" "<>" "<" "<=" ">" ">="]
 )
 
 (def hash-map-boolean 
   {
     false 0
     true 1
+  }
+)
+
+(def hash-map-op-relacionales-to-string 
+  {
+    = 'EQ
+    '= 'EQ
+    "=" 'EQ
+    '<> 'NEQ
+    "<>" 'NEQ
+    > 'GT
+    '> 'GT
+    ">" 'GT
+    >= 'GTE
+    '>= 'GTE
+    ">=" 'GTE
+    < 'LT
+    '< 'LT
+    "<" 'LT
+    <= 'LTE
+    '<= 'LTE
+    "<=" 'LTE
   }
 )
 
@@ -1098,10 +1137,18 @@
   )
 )
 
-(defn es-operador-relacional? [op]
+(defn es-operador-relacional-clojure? [op]
   (cond
-    (or (symbol? op) (string? op)) (true? (some (partial = (name op)) vector-op-relacionales-strings))
-    (fn? op) (true? (some (partial = op) vector-op-relacionales))
+    (or (symbol? op) (string? op)) (true? (some (partial = (name op)) vector-op-relacionales-clojure-strings))
+    (fn? op) (true? (some (partial = op) vector-op-relacionales-clojure))
+    :else false
+  )
+)
+
+(defn es-operador-relacional-pl0? [op]
+  (cond
+    (or (symbol? op) (string? op)) (true? (some (partial = (name op)) vector-op-relacionales-pl0-strings))
+    (fn? op) (true? (some (partial = op) vector-op-relacionales-pl0))
     :else false
   )
 )
