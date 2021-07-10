@@ -793,8 +793,17 @@
 ; [nil () [VAR X Y] :sin-errores [[0] [[X VAR 0] [Y VAR 1]]] 2 [[JMP ?]]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn cargar-var-en-tabla [amb]
+  (if (= (estado amb) :sin-errores)
+    (-> amb
+        (assoc ,,, 4 (let [contexto-amb (contexto amb), 
+                           tipo-id ((simb-ya-parseados amb) 0), 
+                           simb-pars (filter #(= ', %) (nthrest (simb-ya-parseados amb) 1))] 
+                        (assoc contexto-amb 1 (mapv vector simb-pars (repeat (count simb-pars) tipo-id) (range (count simb-pars))))
+        ))
+        (assoc ,,, 5 (inc (prox-var amb))))    
+    amb)
 )
-
+ 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Recibe un ambiente y, si su estado no es :sin-errores, lo devuelve intacto. De lo contrario, lo devuelve modificado
 ; con el tamano del segundo subvector del vector contexto agregado al final del primer subvector del vector contexto.
