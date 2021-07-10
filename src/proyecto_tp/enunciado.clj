@@ -814,6 +814,13 @@
 ; [nil () [] :sin-errores [[0 3] [[X VAR 0] [Y VAR 1] [INI PROCEDURE 1]]] 2 [[JMP ?]]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn inicializar-contexto-local [amb]
+  (if (= (estado amb) :sin-errores)
+    (-> amb
+        (assoc ,,, 4 (let [contexto-amb (contexto amb), 
+                           tam-seg-vector (count ((contexto amb) 1))] 
+                        (assoc contexto-amb 0 (conj (contexto-amb 0) tam-seg-vector))
+        )))    
+    amb)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
