@@ -1021,7 +1021,17 @@
   (if (= (estado amb) :sin-errores)
     (assoc amb 6 (let [bytecode-amb (bytecode amb),
                       tam-bytecode (count (bytecode amb))]
-                (assoc bytecode-amb ubi ['JMP tam-bytecode])))    
+
+                    (if 
+                      (>= ubi tam-bytecode) bytecode-amb
+
+                      (let [jpm-a-corregir (bytecode-amb ubi)]
+                        (cond
+                          (not (vector jpm-a-corregir)) bytecode-amb
+                          (not= (jpm-a-corregir 0) 'JMP) bytecode-amb                      
+                          :else (assoc bytecode-amb ubi ['JMP tam-bytecode])))
+                    )
+                  ))
     amb)
 )
 
