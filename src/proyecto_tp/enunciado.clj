@@ -1018,6 +1018,11 @@
 ; [WRITELN (END .) [] :sin-errores [[0 3] []] 6 [[JMP 8] [JMP 4] [CAL 1] RET [PFM 2] OUT NL RET]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn fixup [amb ubi]
+  (if (= (estado amb) :sin-errores)
+    (assoc amb 6 (let [bytecode-amb (bytecode amb),
+                      tam-bytecode (count (bytecode amb))]
+                (assoc bytecode-amb ubi ['JMP tam-bytecode])))    
+    amb)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
