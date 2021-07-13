@@ -700,10 +700,22 @@
 ; user=> (a-mayusculas-salvo-strings "  writeln ('Se ingresa un valor, se muestra su doble.');")
 ; "  WRITELN ('Se ingresa un valor, se muestra su doble.');"
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ (defn sl [s o]
+  (cond 
+    (= o "'") s
+    (= s "") "'"
+    :else (clojure.string/upper-case s)
+  )
+)
 (defn a-mayusculas-salvo-strings [s]
   (if 
     (nil? s) ""
-      (clojure.string/upper-case s)
+    (let [split-apostrofos (clojure.string/split s #"[^\']*")]
+      (if 
+        (empty? split-apostrofos) (clojure.string/upper-case s)
+        (apply str (map sl (re-seq #"[^\']*" s) split-apostrofos))
+      )  
+    )
   )
 )
 

@@ -10,7 +10,7 @@
   (testing "Prueba de la funcion: a-mayusculas-salvo-strings"
     (is (= "" (a-mayusculas-salvo-strings nil)))
     (is (= "  CONST Y = 2;" (a-mayusculas-salvo-strings "  const Y = 2;")))
-    ;(is (= "  WRITELN ('Se ingresa un valor, se muestra su doble.');" (a-mayusculas-salvo-strings "  writeln ('Se ingresa un valor, se muestra su doble.');")))
+    (is (= "  WRITELN ('Se ingresa un valor, se muestra su doble.');" (a-mayusculas-salvo-strings "  writeln ('Se ingresa un valor, se muestra su doble.');")))
   )
 )
 
@@ -117,13 +117,13 @@
 ;  )
 ;)
 
-(deftest expresion-test
-  (testing "Prueba de la funcion: expresion"
-    (is (= ['- (list (symbol "(") 'X '* 2 '+ 1 (symbol ")") 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :error '[[0] [[X VAR 0]]] 1 []] (expresion ['- (list (symbol "(") 'X '* 2 '+ 1 (symbol ")") 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :error '[[0] [[X VAR 0]]] 1 []])))
-    (is (= ['END (symbol "(.)") ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=") '+ (list (symbol "(") 'X (symbol "*") '2 '+ '1)] :sin-errores '[[0] [[X VAR 0]]] '1 '[[PFM 0] [PFI 2] MUL [PFI 1] ADD]] (expresion ['+ (list (symbol "(") 'X '* 2 '+ 1 (symbol ")") 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :sin-errores '[[0] [[X VAR 0]]] 1 []])))
-    (is (= ['END (symbol "(.)") ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=") '- (list (symbol "(") 'X (symbol "*") '2 '+ '1)] :sin-errores '[[0] [[X VAR 0]]] '1 '[[PFM 0] [PFI 2] MUL [PFI 1] ADD NEG]] (expresion ['- (list (symbol "(") 'X '* 2 '+ 1 (symbol ")") 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :sin-errores '[[0] [[X VAR 0]]] 1 []])))
-  )
-)
+;(deftest expresion-test
+;  (testing "Prueba de la funcion: expresion"
+;    (is (= ['- (list (symbol "(") 'X '* 2 '+ 1 (symbol ")") 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :error '[[0] [[X VAR 0]]] 1 []] (expresion ['- (list (symbol "(") 'X '* 2 '+ 1 (symbol ")") 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :error '[[0] [[X VAR 0]]] 1 []])))
+;    (is (= ['END (symbol "(.)") ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=") '+ (list (symbol "(") 'X (symbol "*") '2 '+ '1)] :sin-errores '[[0] [[X VAR 0]]] '1 '[[PFM 0] [PFI 2] MUL [PFI 1] ADD]] (expresion ['+ (list (symbol "(") 'X '* 2 '+ 1 (symbol ")") 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :sin-errores '[[0] [[X VAR 0]]] 1 []])))
+;    (is (= ['END (symbol "(.)") ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=") '- (list (symbol "(") 'X (symbol "*") '2 '+ '1)] :sin-errores '[[0] [[X VAR 0]]] '1 '[[PFM 0] [PFI 2] MUL [PFI 1] ADD NEG]] (expresion ['- (list (symbol "(") 'X '* 2 '+ 1 (symbol ")") 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :sin-errores '[[0] [[X VAR 0]]] 1 []])))
+;  )
+;)
 
 (deftest aplicar-aritmetico-test
   (testing "Prueba de la funcion: aplicar-aritmetico"
