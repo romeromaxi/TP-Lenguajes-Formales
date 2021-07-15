@@ -808,14 +808,13 @@
   (if (= (estado amb) :sin-errores)
     (-> amb
         (assoc ,,, 4 (let [contexto-amb (contexto amb), 
-                           tipo-id ((simb-ya-parseados amb) 0), 
-                           simb-pars (filter #(= ', %) (nthrest (simb-ya-parseados amb) 1))] 
-                        (assoc contexto-amb 1 (mapv vector simb-pars (repeat (count simb-pars) tipo-id) (range (count simb-pars))))
+                           valor-vars (count ((contexto amb) 1))] 
+                        [(contexto-amb 0) (conj (contexto-amb 1) [(last (simb-ya-parseados amb)) 'VAR valor-vars])]
         ))
         (assoc ,,, 5 (inc (prox-var amb))))    
     amb)
 )
- 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Recibe un ambiente y, si su estado no es :sin-errores, lo devuelve intacto. De lo contrario, lo devuelve modificado
 ; con el tamano del segundo subvector del vector contexto agregado al final del primer subvector del vector contexto.
@@ -845,8 +844,18 @@
 ; user=> (declaracion-var ['VAR (list 'X (symbol ",") 'Y (symbol ";") 'BEGIN 'X (symbol ":=") 7 (symbol ";") 'Y (symbol ":=") 12 (symbol ";") 'END (symbol ".")) [] :sin-errores [[0] []] 0 '[[JMP ?]]])
 ; [BEGIN (X := 7 ; Y := 12 ; END .) [VAR X , Y ;] :sin-errores [[0] [[X VAR 0] [Y VAR 1]]] 2 [[JMP ?]]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn declaracion-var [amb]
-)
+;(defn declaracion-var [amb]
+;  (if (= (estado amb) :sin-errores)
+;      (if (= (simb-actual amb) 'CONST)
+;          (-> amb
+;              (escanear)
+;              (procesar-terminal ,,, identificador? 5)
+;              (controlar-duplicado)
+;              (cargar-var-en-tabla)
+;              (procesar-terminal ,,, (symbol ";") 3))
+;          amb)  
+;    amb)
+;)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Recibe un ambiente y, si su estado no es :sin-errores, lo devuelve intacto. De lo contrario, verifica si se debe
