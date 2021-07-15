@@ -844,18 +844,19 @@
 ; user=> (declaracion-var ['VAR (list 'X (symbol ",") 'Y (symbol ";") 'BEGIN 'X (symbol ":=") 7 (symbol ";") 'Y (symbol ":=") 12 (symbol ";") 'END (symbol ".")) [] :sin-errores [[0] []] 0 '[[JMP ?]]])
 ; [BEGIN (X := 7 ; Y := 12 ; END .) [VAR X , Y ;] :sin-errores [[0] [[X VAR 0] [Y VAR 1]]] 2 [[JMP ?]]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;(defn declaracion-var [amb]
-;  (if (= (estado amb) :sin-errores)
-;      (if (= (simb-actual amb) 'CONST)
-;          (-> amb
-;              (escanear)
-;              (procesar-terminal ,,, identificador? 5)
-;              (controlar-duplicado)
-;              (cargar-var-en-tabla)
-;              (procesar-terminal ,,, (symbol ";") 3))
-;          amb)  
-;    amb)
-;)
+(defn declaracion-var [amb]
+  (if (= (estado amb) :sin-errores)
+      (if (= (simb-actual amb) 'VAR)
+          (-> amb
+              (escanear)
+              (procesar-terminal ,,, identificador? 5)
+              (controlar-duplicado)
+              (cargar-var-en-tabla)
+              (declarar-mas-idents)
+              (procesar-terminal ,,, (symbol ";") 3))
+          amb)  
+    amb)
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Recibe un ambiente y, si su estado no es :sin-errores, lo devuelve intacto. De lo contrario, verifica si se debe
