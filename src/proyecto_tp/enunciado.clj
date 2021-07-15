@@ -699,23 +699,26 @@
 ; "  CONST Y = 2;"
 ; user=> (a-mayusculas-salvo-strings "  writeln ('Se ingresa un valor, se muestra su doble.');")
 ; "  WRITELN ('Se ingresa un valor, se muestra su doble.');"
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- (defn sl [s o]
-  (cond 
-    (= o "'") s
-    (= s "") "'"
-    :else (clojure.string/upper-case s)
-  )
-)
-(defn a-mayusculas-salvo-strings [s]
-  (if 
-    (nil? s) ""
-    (let [split-apostrofos (clojure.string/split s #"[^\']*")]
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn a-mayusculas-salvo-strings 
+  ([s]
       (if 
-        (empty? split-apostrofos) (clojure.string/upper-case s)
-        (apply str (map sl (re-seq #"[^\']*" s) split-apostrofos))
-      )  
-    )
+        (nil? s) ""
+        (a-mayusculas-salvo-strings s "" false)
+      )
+  )
+
+  ([s finalStr apost]
+      (if
+          (empty? s) finalStr
+          (if (= (str (first s)) "'")
+            (a-mayusculas-salvo-strings (rest s) (str finalStr (first s)) (not apost))
+            (if apost 
+              (a-mayusculas-salvo-strings (rest s) (str finalStr (first s)) apost)
+              (a-mayusculas-salvo-strings (rest s) (str finalStr (clojure.string/upper-case (first s))) apost)
+            )
+          )
+      )
   )
 )
 

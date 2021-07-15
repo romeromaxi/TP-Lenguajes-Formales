@@ -11,6 +11,8 @@
     (is (= "" (a-mayusculas-salvo-strings nil)))
     (is (= "  CONST Y = 2;" (a-mayusculas-salvo-strings "  const Y = 2;")))
     (is (= "  WRITELN ('Se ingresa un valor, se muestra su doble.');" (a-mayusculas-salvo-strings "  writeln ('Se ingresa un valor, se muestra su doble.');")))
+    (is (= "MAYUSCULA 'minuscula' MAYUSCULA" (a-mayusculas-salvo-strings "mayuscula 'minuscula' mayuscula")))
+    (is (= "MAYUSCULA 'esto es una subcadena' CALL 'otra subcadena' PROCEDURE '" (a-mayusculas-salvo-strings "MAYUSCULA 'esto es una subcadena' call 'otra subcadena' procedure '")))
   )
 )
 
@@ -109,7 +111,7 @@
 ;(deftest termino-test
 ;  (testing "Prueba de la funcion: termino"
 ;    (is (= ['X (list '* 2 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :error '[[0] [[X VAR 0]]] 1 []] (termino ['X (list '* 2 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :error '[[0] [[X VAR 0]]] 1 []])))
-;    (is (= ['END (symbol "(.)") ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=") 'X '* '2] :sin-errores '[[0] [[X VAR 0]]] 1 [[PFM 0] [PFI 2] MUL]] (termino ['X (list '* 2 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :sin-errores '[[0] [[X VAR 0]]] 1 []])))
+;    (is (= ['END (symbol "(.)") ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=") 'X (symbol "*") 2] :sin-errores '[[0] [[X VAR 0]]] 1 '[[PFM 0] [PFI 2] MUL]] (termino ['X (list '* 2 'END (symbol ".")) ['VAR 'X (symbol ";") 'BEGIN 'X (symbol ":=")] :sin-errores '[[0] [[X VAR 0]]] 1 []])))
 ;  )
 ;)
 
