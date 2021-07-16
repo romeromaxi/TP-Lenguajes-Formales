@@ -737,8 +737,9 @@
                   (recur cod mem (second fetched) (pop pila-dat) pila-llam)
               )
 
-        ; CAL: Coloca en la pila de llamadas el valor del contador de programa incrementado en 1 y reemplaza el contador de programa por la direccion que forma parte de la instruccion
-          CAL nil
+        ; CAL: Coloca en la pila de llamadas el valor del contador de programa incrementado en 1 y reemplaza el contador de programa 
+        ;      por la direccion que forma parte de la instruccion
+          CAL (recur cod mem (second fetched) pila-dat (conj pila-llam (inc cont-prg)))
         
         ; RET: Saca una direccion de la pila de llamadas y la coloca en el contador de programa        
           RET (recur cod mem (last pila-llam) pila-dat (pop pila-llam))
