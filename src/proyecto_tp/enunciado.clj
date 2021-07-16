@@ -684,6 +684,49 @@
                   (do (print (apply str (butlast (rest (str (second fetched)))))) (flush)
                       (recur cod mem (inc cont-prg) pila-dat pila-llam)))
           NL (do (prn) (recur cod mem (inc cont-prg) pila-dat pila-llam))
+        ; POP: Saca un valor de la pila de datos, lo coloca en una direccion de memoria que forma parte de la instruccion (direccionamiento directo) e incrementa el contador de programa
+          POP nil
+        ; PFM: Coloca en la pila de datos un valor proveniente de una direccion de memoria que forma parte de la instruccion (PUSH FROM MEMORY: direccionamiento directo) e incrementa el contador de programa 
+          PFM nil
+        
+        ; PFI: Coloca en la pila de datos un valor que forma parte de la instruccion (PUSH FROM INSTRUCTION: direccionamiento inmediato) e incrementa el contador de programa 
+          PFI nil
+
+        ; ADD: Reemplaza los dos valores ubicados en el tope de la pila de datos por su suma e incrementa el contador de programa
+          ADD (recur cod mem (inc cont-prg) (aplicar-aritmetico + pila-dat) pila-llam)  
+        ; SUB: Reemplaza los dos valores ubicados en el tope de la pila de datos por su resta e incrementa el contador de programa 
+          SUB (recur cod mem (inc cont-prg) (aplicar-aritmetico - pila-dat) pila-llam) 
+        ; MUL: Reemplaza los dos valores ubicados en el tope de la pila de datos por su producto e incrementa el contador de programa
+          MUL (recur cod mem (inc cont-prg) (aplicar-aritmetico * pila-dat) pila-llam)  
+        ; DIV: Reemplaza los dos valores ubicados en el tope de la pila de datos por su cociente entero e incrementa el contador de programa  
+          DIV (recur cod mem (inc cont-prg) (aplicar-aritmetico / pila-dat) pila-llam)
+          
+        ; EQ : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son iguales (si no, por 0) e incrementa el contador de programa
+          EQ (recur cod mem (inc cont-prg) (aplicar-relacional = pila-dat) pila-llam)
+        ; NEQ: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son distintos (si no, por 0) e incrementa el contador de programa
+          NEQ (recur cod mem (inc cont-prg) (aplicar-relacional not= pila-dat) pila-llam)
+        ; GT : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si el valor ubicado debajo del tope es mayor que el ubicado en el tope (si no, por 0) e incrementa el contador de programa
+          GT (recur cod mem (inc cont-prg) (aplicar-relacional > pila-dat) pila-llam)
+        ; GTE: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si el valor ubicado debajo del tope es mayor o igual que el ubicado en el tope (si no, por 0) e incrementa el contador de programa
+          GTE (recur cod mem (inc cont-prg) (aplicar-relacional >= pila-dat) pila-llam)
+        ; LT : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si el valor ubicado debajo del tope es menor que el ubicado en el tope (si no, por 0) e incrementa el contador de programa
+          LT (recur cod mem (inc cont-prg) (aplicar-relacional < pila-dat) pila-llam)
+        ; LTE: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si el valor ubicado debajo del tope es menor o igual que el ubicado en el tope (si no, por 0) e incrementa el contador de programa
+          LTE (recur cod mem (inc cont-prg) (aplicar-relacional <= pila-dat) pila-llam)
+        
+        ; NEG: Le cambia el signo al valor ubicado en el tope de la pila de datos e incrementa el contador de programa
+          NEG nil
+        ; ODD: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es impar (si no, por 0) e incrementa el contador de programa
+          ODD nil
+        
+        ; JMP: Reemplaza el contador de programa por la direccion que forma parte de la instruccion
+          JMP nil
+        ; JC : Saca un valor de la pila de datos y si es 0 incrementa el contador de programa (si no, reemplaza el contador de programa por la direccion que forma parte de la instruccion)
+          JC nil
+        ; CAL: Coloca en la pila de llamadas el valor del contador de programa incrementado en 1 y reemplaza el contador de programa por la direccion que forma parte de la instruccion
+          CAL nil
+        ; RET: Saca una direccion de la pila de llamadas y la coloca en el contador de programa        
+          RET nil
        )
   )
 )
