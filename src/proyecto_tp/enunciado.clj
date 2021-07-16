@@ -685,13 +685,13 @@
                       (recur cod mem (inc cont-prg) pila-dat pila-llam)))
           NL (do (prn) (recur cod mem (inc cont-prg) pila-dat pila-llam))
         ; POP: Saca un valor de la pila de datos, lo coloca en una direccion de memoria que forma parte de la instruccion (direccionamiento directo) e incrementa el contador de programa
-          POP nil ;(recur cod mem (inc cont-prg) (pop pila-dat) pila-llam)
+          POP (recur cod (assoc mem (second fetched) (last pila-dat)) (inc cont-prg) (pop pila-dat) pila-llam)
         
         ; PFM: Coloca en la pila de datos un valor proveniente de una direccion de memoria que forma parte de la instruccion (PUSH FROM MEMORY: direccionamiento directo) e incrementa el contador de programa 
-          PFM nil
+          PFM (recur cod mem (inc cont-prg) (conj pila-dat (mem (second fetched))) pila-llam)
         
         ; PFI: Coloca en la pila de datos un valor que forma parte de la instruccion (PUSH FROM INSTRUCTION: direccionamiento inmediato) e incrementa el contador de programa 
-          PFI nil
+          PFI (recur cod mem (inc cont-prg) (conj pila-dat (second fetched)) pila-llam)
 
         ; ADD: Reemplaza los dos valores ubicados en el tope de la pila de datos por su suma e incrementa el contador de programa
           ADD (recur cod mem (inc cont-prg) (aplicar-aritmetico + pila-dat) pila-llam)  
@@ -716,16 +716,10 @@
           LTE (recur cod mem (inc cont-prg) (aplicar-relacional <= pila-dat) pila-llam)
         
         ; NEG: Le cambia el signo al valor ubicado en el tope de la pila de datos e incrementa el contador de programa
-          NEG (if (integer? (last pila-dat))
-                  (recur cod mem (inc cont-prg) (conj (pop pila-dat) (- (last pila-dat))) pila-llam)
-                  (dar-error amb 7)
-              )
+          NEG (recur cod mem (inc cont-prg) (conj (pop pila-dat) (- (last pila-dat))) pila-llam)
 
         ; ODD: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es impar (si no, por 0) e incrementa el contador de programa
-          ODD (if (integer? (last pila-dat))
-                  (recur cod mem (inc cont-prg) (conj (pop pila-dat) (hash-map-boolean (odd? (last pila-dat)))) pila-llam)
-                  (dar-error amb 7)
-              )
+          ODD (recur cod mem (inc cont-prg) (conj (pop pila-dat) (hash-map-boolean (odd? (last pila-dat)))) pila-llam)
 
         ; JMP: Reemplaza el contador de programa por la direccion que forma parte de la instruccion
           JMP (recur cod mem (second fetched) pila-dat pila-llam)
