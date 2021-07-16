@@ -671,7 +671,7 @@
 
 (defn interpretar [cod mem cont-prg pila-dat pila-llam]
   (let [fetched (cod cont-prg),
-        opcode (if (symbol? fetched) fetched (first fetched))]
+    opcode (if (symbol? fetched) fetched (first fetched))]
        (case opcode
           HLT nil
           IN (let [entr (try (Integer/parseInt (read-line)) (catch Exception e ""))]
@@ -685,7 +685,8 @@
                       (recur cod mem (inc cont-prg) pila-dat pila-llam)))
           NL (do (prn) (recur cod mem (inc cont-prg) pila-dat pila-llam))
         ; POP: Saca un valor de la pila de datos, lo coloca en una direccion de memoria que forma parte de la instruccion (direccionamiento directo) e incrementa el contador de programa
-          POP nil
+          POP (recur cod mem (inc cont-prg) (pop pila-dat) pila-llam)
+        
         ; PFM: Coloca en la pila de datos un valor proveniente de una direccion de memoria que forma parte de la instruccion (PUSH FROM MEMORY: direccionamiento directo) e incrementa el contador de programa 
           PFM nil
         
@@ -1157,7 +1158,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn generar-operador-relacional [amb operador]
   (if (and (= (estado amb) :sin-errores) (es-operador-relacional-pl0? operador))
-    (assoc amb 6 (conj (bytecode amb) (hash-map-op-relacionales-to-string operador)))      
+    (generar amb (hash-map-op-relacionales-to-string operador)) 
     amb)
 )
 
@@ -1178,7 +1179,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn generar-signo [amb signo]
   (if (and (= (estado amb) :sin-errores) (es-operador-monadico-de-signo? signo) (es-operador-monadico-signo-negativo? signo))
-    (assoc amb 6 (conj (bytecode amb) 'NEG))      
+    (generar amb 'NEG)   
     amb)
 )
 
