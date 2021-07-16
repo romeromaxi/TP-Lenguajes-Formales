@@ -817,7 +817,7 @@
   (if (= (estado amb) :sin-errores)
     (-> amb
         (assoc ,,, 4 (let [contexto-amb (contexto amb), 
-                           valor-vars (count ((contexto amb) 1))] 
+                           valor-vars (prox-var amb)] 
                         [(contexto-amb 0) (conj (contexto-amb 1) [(last (simb-ya-parseados amb)) 'VAR valor-vars])]
         ))
         (assoc ,,, 5 (inc (prox-var amb))))    
@@ -903,6 +903,9 @@
 ; [END (.) [VAR X ; BEGIN X := X * 2] :sin-errores [[0] [[X VAR 0]]] 1 [[PFM 0] [PFI 2] MUL]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn termino [amb]
+  (if (= (estado amb) :sin-errores)
+    amb
+    amb)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -917,9 +920,9 @@
 ; [END (.) [VAR X ; BEGIN X := - ( X * 2 + 1 )] :sin-errores [[0] [[X VAR 0]]] 1 [[PFM 0] [PFI 2] MUL [PFI 1] ADD NEG]]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn expresion [amb]
-;  (if (= (estado amb) :sin-errores)
-;    amb
-;    amb)
+  (if (= (estado amb) :sin-errores)
+    amb
+    amb)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
