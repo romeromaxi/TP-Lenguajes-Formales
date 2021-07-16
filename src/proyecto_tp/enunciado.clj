@@ -730,14 +730,18 @@
         ; JMP: Reemplaza el contador de programa por la direccion que forma parte de la instruccion
           JMP (recur cod mem (second fetched) pila-dat pila-llam)
 
-        ; JC : Saca un valor de la pila de datos y si es 0 incrementa el contador de programa (si no, reemplaza el contador de programa por la direccion que forma parte de la instruccion)
-          JC nil
+        ; JC : Saca un valor de la pila de datos y si es 0 incrementa el contador de programa 
+        ;      (si no, reemplaza el contador de programa por la direccion que forma parte de la instruccion)
+          JC (if (zero? (last pila-dat))
+                  (recur cod mem (inc cont-prg) (pop pila-dat) pila-llam)
+                  (recur cod mem (second fetched) (pop pila-dat) pila-llam)
+              )
 
         ; CAL: Coloca en la pila de llamadas el valor del contador de programa incrementado en 1 y reemplaza el contador de programa por la direccion que forma parte de la instruccion
           CAL nil
         
         ; RET: Saca una direccion de la pila de llamadas y la coloca en el contador de programa        
-          RET nil
+          RET (recur cod mem (last pila-llam) pila-dat (pop pila-llam))
        )
   )
 )
