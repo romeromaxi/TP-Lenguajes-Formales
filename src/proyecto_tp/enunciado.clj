@@ -717,9 +717,13 @@
         
         ; NEG: Le cambia el signo al valor ubicado en el tope de la pila de datos e incrementa el contador de programa
           NEG nil
-        ; ODD: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es impar (si no, por 0) e incrementa el contador de programa
-          ODD nil
         
+        ; ODD: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es impar (si no, por 0) e incrementa el contador de programa
+          ODD (if (integer? (last pila-dat))
+                  (recur cod mem (inc cont-prg) (conj (pop pila-dat) (hash-map-boolean (odd? (last pila-dat)))) pila-llam)
+                  (dar-error amb 7)
+              )
+
         ; JMP: Reemplaza el contador de programa por la direccion que forma parte de la instruccion
           JMP nil
         ; JC : Saca un valor de la pila de datos y si es 0 incrementa el contador de programa (si no, reemplaza el contador de programa por la direccion que forma parte de la instruccion)
