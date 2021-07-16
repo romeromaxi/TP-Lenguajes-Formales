@@ -85,10 +85,10 @@
 (declare es-operador-monadico-de-signo?)
 (declare es-operador-monadico-signo-negativo?)
 
-; (defn spy
-;   ([x] (do (prn x) x))
-;   ([msg x] (do (print msg) (print ": ") (prn x) x))
-; )
+(defn spy
+   ([x] (do (prn x) x))
+   ([msg x] (do (print msg) (print ": ") (prn x) x))
+)
 
 (defn driver-loop
    ([]
@@ -904,7 +904,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn termino [amb]
   (if (= (estado amb) :sin-errores)
-    amb
+    (-> amb
+        (factor)
+        (procesar-mas-factores))
     amb)
 )
 
@@ -921,7 +923,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn expresion [amb]
   (if (= (estado amb) :sin-errores)
-    amb
+    (case (simb-actual amb) 
+      - (-> amb
+            (escanear)
+            (factor)
+            (procesar-mas-factores)
+            (generar ,,, 'NEG))
+      + (-> amb
+            (escanear)
+            (factor)
+            (procesar-mas-factores))
+      amb)
     amb)
 )
 
