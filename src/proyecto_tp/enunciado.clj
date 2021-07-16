@@ -926,14 +926,19 @@
     (case (simb-actual amb) 
       - (-> amb
             (escanear)
-            (factor)
-            (procesar-mas-factores)
-            (generar ,,, 'NEG))
+            (termino)
+            (procesar-mas-terminos)
+            (generar ,,, 'NEG)
+          )
       + (-> amb
             (escanear)
-            (factor)
-            (procesar-mas-factores))
-      amb)
+            (termino)
+            (procesar-mas-terminos)
+          )
+      (-> amb
+        (termino)
+        (procesar-mas-terminos)
+      ))
     amb)
 )
 
