@@ -716,8 +716,11 @@
           LTE (recur cod mem (inc cont-prg) (aplicar-relacional <= pila-dat) pila-llam)
         
         ; NEG: Le cambia el signo al valor ubicado en el tope de la pila de datos e incrementa el contador de programa
-          NEG nil
-        
+          NEG (if (integer? (last pila-dat))
+                  (recur cod mem (inc cont-prg) (conj (pop pila-dat) (- (last pila-dat))) pila-llam)
+                  (dar-error amb 7)
+              )
+
         ; ODD: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es impar (si no, por 0) e incrementa el contador de programa
           ODD (if (integer? (last pila-dat))
                   (recur cod mem (inc cont-prg) (conj (pop pila-dat) (hash-map-boolean (odd? (last pila-dat)))) pila-llam)
