@@ -685,7 +685,7 @@
                       (recur cod mem (inc cont-prg) pila-dat pila-llam)))
           NL (do (prn) (recur cod mem (inc cont-prg) pila-dat pila-llam))
         ; POP: Saca un valor de la pila de datos, lo coloca en una direccion de memoria que forma parte de la instruccion (direccionamiento directo) e incrementa el contador de programa
-          POP (recur cod mem (inc cont-prg) (pop pila-dat) pila-llam)
+          POP nil ;(recur cod mem (inc cont-prg) (pop pila-dat) pila-llam)
         
         ; PFM: Coloca en la pila de datos un valor proveniente de una direccion de memoria que forma parte de la instruccion (PUSH FROM MEMORY: direccionamiento directo) e incrementa el contador de programa 
           PFM nil
@@ -728,11 +728,14 @@
               )
 
         ; JMP: Reemplaza el contador de programa por la direccion que forma parte de la instruccion
-          JMP nil
+          JMP (recur cod mem (second fetched) pila-dat pila-llam)
+
         ; JC : Saca un valor de la pila de datos y si es 0 incrementa el contador de programa (si no, reemplaza el contador de programa por la direccion que forma parte de la instruccion)
           JC nil
+
         ; CAL: Coloca en la pila de llamadas el valor del contador de programa incrementado en 1 y reemplaza el contador de programa por la direccion que forma parte de la instruccion
           CAL nil
+        
         ; RET: Saca una direccion de la pila de llamadas y la coloca en el contador de programa        
           RET nil
        )
