@@ -12,7 +12,8 @@
     (is (= "  CONST Y = 2;" (a-mayusculas-salvo-strings "  const Y = 2;")))
     (is (= "  WRITELN ('Se ingresa un valor, se muestra su doble.');" (a-mayusculas-salvo-strings "  writeln ('Se ingresa un valor, se muestra su doble.');")))
     (is (= "MAYUSCULA 'minuscula' MAYUSCULA" (a-mayusculas-salvo-strings "mayuscula 'minuscula' mayuscula")))
-    (is (= "MAYUSCULA 'esto es una subcadena' CALL 'otra subcadena' PROCEDURE '" (a-mayusculas-salvo-strings "MAYUSCULA 'esto es una subcadena' call 'otra subcadena' procedure '")))
+    (is (= "MAYUSCULA 'esto es una subcadena' CALL 'otra subcadena' PROCEDURE '" (a-mayusculas-salvo-strings "mayuscula 'esto es una subcadena' call 'otra subcadena' procedure '")))
+    (is (= "MAYUSCULA 'subcadena con numero 2' VAR X = 2" (a-mayusculas-salvo-strings "mayuscula 'subcadena con numero 2' var x = 2")))
   )
 )
 
@@ -52,6 +53,9 @@
     (is (= false (identificador? "#WHILE")))
     (is (= false (identificador? "V:2")))
     (is (= false (identificador? "procedure")))
+    (is (= false (identificador? "pro cedure")))
+    (is (= false (identificador? "")))
+    (is (= false (identificador? "nom var")))
   )
 )
 

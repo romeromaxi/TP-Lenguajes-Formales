@@ -809,6 +809,8 @@
     (or (nil? x) (number? x) (boolean? x)) false 
     (es-numero-como-caracter? (first (name x))) false
     (contiene-simbolos? x) false
+    (clojure.string/blank? (str x)) false
+    (clojure.string/includes? (str x) " ") false
     :else (not (palabra-reservada? x))
   )
 )
