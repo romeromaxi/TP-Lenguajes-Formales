@@ -219,6 +219,9 @@
     (is (= '[nil () [] :sin-errores [[0] [[X VAR 0]]] 1 [MUL ADD]] (generar-signo [nil () [] :sin-errores '[[0] [[X VAR 0]]] 1 '[MUL ADD]] '+)))
     (is (= '[nil () [] :sin-errores [[0] [[X VAR 0]]] 1 [MUL ADD]] (generar-signo [nil () [] :sin-errores '[[0] [[X VAR 0]]] 1 '[MUL ADD]] '*)))
     (is (= '[nil () [] :sin-errores [[0] [[X VAR 0]]] 1 [MUL ADD NEG]] (generar-signo [nil () [] :sin-errores '[[0] [[X VAR 0]]] 1 '[MUL ADD]] '-)))
+    (is (= '[nil () [] :sin-errores [[0] [[X VAR 0] [Y VAR 1]]] 2 [[CAL 1] RET MUL ADD NEG]] (generar-signo [nil () [] :sin-errores '[[0] [[X VAR 0] [Y VAR 1]]] 2 '[[CAL 1] RET MUL ADD]] '-)))
+    (is (= '[nil () [] :sin-errores [[0] [[X VAR 0] [Y VAR 1]]] 2 [[CAL 1] RET MUL ADD]] (generar-signo [nil () [] :sin-errores '[[0] [[X VAR 0] [Y VAR 1]]] 2 '[[CAL 1] RET MUL ADD]] '+)))
+    (is (= '[nil () [] :sin-errores [[0] [[X VAR 0]]] 1 [MUL ADD NEG]] (generar-signo [nil () [] :sin-errores '[[0] [[X VAR 0]]] 1 '[MUL ADD]] "-")))
   )
 )
 
