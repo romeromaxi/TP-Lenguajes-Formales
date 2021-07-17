@@ -2,14 +2,16 @@
 
 Repositorio del trabajo práctico para la materia 75.14 Lenguajes Formales - FIUBA
 
-## Installation
+------------------------------------------------------------
+### Para lanzar el programa
 
-## Usage
+~~~
+.\lein run
+~~~
 
-## Options
+------------------------------------------------------------
+### Para correr todos los tests
 
-## Examples
-
-### Bugs
-
-## License
+~~~
+.\lein test
+~~~
