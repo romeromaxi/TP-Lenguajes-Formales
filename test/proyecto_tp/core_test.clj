@@ -76,6 +76,8 @@
     (is (= false (ya-declarado-localmente? 'Z '[[0] [[X VAR 0] [Y VAR 1]]])))
     (is (= false (ya-declarado-localmente? 'Y '[[0 3 5] [[X VAR 0] [Y VAR 1] [INICIAR PROCEDURE 1] [Y CONST 2] [ASIGNAR PROCEDURE 2]]])))
     (is (= true (ya-declarado-localmente? 'Y '[[0 3 5] [[X VAR 0] [Y VAR 1] [INICIAR PROCEDURE 1] [Y CONST 2] [ASIGNAR PROCEDURE 2] [Y CONST 6]]])))
+    (is (= true (ya-declarado-localmente? 'X '[[0] [[X VAR 0] [Y VAR 1]]])))
+    (is (= false (ya-declarado-localmente? 'X '[[0 1 9] [[X VAR 0] [Y VAR 1]]])))
   )
 )
 

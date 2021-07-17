@@ -806,7 +806,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn identificador? [x]
   (cond 
-    (or (nil? x) (number? x) (boolean? x)) false 
+    (no-es-string? x) false 
     (es-numero-como-caracter? (first (name x))) false
     (contiene-simbolos? x) false
     (clojure.string/blank? (str x)) false
