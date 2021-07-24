@@ -64,6 +64,7 @@
 (declare aplicar-aritmetico)
 (declare aplicar-relacional)
 (declare dump)
+(declare procesar-distintos-iguales)
 
 (declare lista-palabras-reservadas)
 (declare vector-op-aritmeticas-diadicas)
@@ -534,7 +535,8 @@
   (if (= (estado amb) :sin-errores)
       (case (simb-actual amb) 
          = (-> amb
-               (escanear))
+               (escanear)
+               (procesar-distintos-iguales))
         <> (-> amb
                (escanear))
          > (-> amb
@@ -545,8 +547,15 @@
                (escanear))
         <= (-> amb
                (escanear))
+              
        (dar-error amb 14))
       amb)
+)
+
+(defn procesar-distintos-iguales [amb]
+  (if (= (estado amb) :sin-errores)
+    (if (= (simb-actual amb) '=) (escanear amb) amb)
+    amb)  
 )
 
 (defn condicion [amb]
@@ -659,6 +668,7 @@
 ; GTE: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si el valor ubicado debajo del tope es mayor o igual que el ubicado en el tope (si no, por 0) e incrementa el contador de programa
 ; LT : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si el valor ubicado debajo del tope es menor que el ubicado en el tope (si no, por 0) e incrementa el contador de programa
 ; LTE: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si el valor ubicado debajo del tope es menor o igual que el ubicado en el tope (si no, por 0) e incrementa el contador de programa
+; EQM: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son iguales y el tipo (si no, por 0) e incrementa el contador de programa
 ;
 ; NEG: Le cambia el signo al valor ubicado en el tope de la pila de datos e incrementa el contador de programa
 ; ODD: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es impar (si no, por 0) e incrementa el contador de programa
@@ -1223,28 +1233,28 @@
 ; Vector de todas las operaciones relacionales de Clojure 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def vector-op-relacionales-clojure 
-  [= not= < <= > >=]
+  [= not= < <= > >= ==]
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Vector de todas las operaciones relacionales de Clojure como strings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def vector-op-relacionales-clojure-strings 
-  ["=" "not=" "<" "<=" ">" ">="]
+  ["=" "not=" "<" "<=" ">" ">=" "=="]
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Vector de todas las operaciones relacionales de PL0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def vector-op-relacionales-pl0 
-  [= < <= > >=]
+  [= < <= > >= ==]
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Vector de todas las operaciones relacionales de PL0 como strings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def vector-op-relacionales-pl0-strings 
-  ["=" "<>" "<" "<=" ">" ">="]
+  ["=" "<>" "<" "<=" ">" ">=" "=="]
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1279,6 +1289,9 @@
     <= 'LTE
     '<= 'LTE
     "<=" 'LTE
+    == 'EQM
+    '== 'EQM
+    "==" 'EQM
   }
 )
 

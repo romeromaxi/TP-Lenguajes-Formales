@@ -1,0 +1,19 @@
+var X, Z;
+
+procedure INVERTIRSIESDOS;
+var A, B;
+begin
+    Z := X;
+    if X == 2 then Z:= -X
+end;
+
+Begin
+  writeln ('************************************************************');
+  writeln ('Se ingresa un valor, e le cambia el signo si es igual a dos');
+  writeln ('************************************************************');
+
+  write ('X: '); readLn (X);
+  call INVERTIRSIESDOS;
+  writeLn ('X= ', Z);
+  writeln;
+end.
