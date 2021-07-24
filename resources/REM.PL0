@@ -1,0 +1,18 @@
+var X, Y, Z;
+
+procedure RESTO;
+begin
+     Z := X rem Y
+end;
+
+Begin
+  writeln ('************************************************************');
+  writeln ('Se ingresan dos valores, se muestra el resto.');
+  writeln ('************************************************************');
+
+  write ('X: '); readLn (X);
+  write ('Y: '); readLn (Y);
+  call RESTO;
+  writeLn ('X rem Y=', Z);
+  writeln;
+end.

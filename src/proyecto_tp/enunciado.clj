@@ -580,7 +580,7 @@
                (escanear)
                (termino)
                (generar ,,, 'SUB)
-               (recur))
+               (recur))             
          amb)
       amb)
 )
@@ -598,6 +598,11 @@
                (factor)
                (generar ,,, 'DIV)
                (recur))
+        REM (-> amb
+                (escanear)
+                (factor)
+                (generar ,,, 'REM)
+                (recur)) 
          amb)
       amb)
 )
@@ -701,6 +706,9 @@
           MUL (recur cod mem (inc cont-prg) (aplicar-aritmetico * pila-dat) pila-llam)  
         ; DIV: Reemplaza los dos valores ubicados en el tope de la pila de datos por su cociente entero e incrementa el contador de programa  
           DIV (recur cod mem (inc cont-prg) (aplicar-aritmetico / pila-dat) pila-llam)
+
+        ; REM: Reemplaza los dos valores ubicados en el tope de la pila de datos por el resto e incrementa el contador de programa  
+          REM (recur cod mem (inc cont-prg) (aplicar-aritmetico rem pila-dat) pila-llam)        
           
         ; EQ : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son iguales (si no, por 0) e incrementa el contador de programa
           EQ (recur cod mem (inc cont-prg) (aplicar-relacional = pila-dat) pila-llam)
@@ -1209,14 +1217,14 @@
 ; Vector de todas las operaciones aritmeticas diadicas
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def vector-op-aritmeticas-diadicas 
-  [+ - * /]
+  [+ - * / rem]
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Vector de todas las operaciones aritmeticas diadicas como strings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def vector-op-aritmeticas-diadicas-strings
-  ["+" "-" "*" "/"]
+  ["+" "-" "*" "/" "rem" "REM"]
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
