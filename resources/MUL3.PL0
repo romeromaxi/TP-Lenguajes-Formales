@@ -1,0 +1,14 @@
+var X, Y, Z, W;
+
+Begin
+  writeln ('************************************************************');
+  writeln ('Se ingresan tres valores, se muestra su producto.');
+  writeln ('************************************************************');
+
+  write ('X: '); readLn (X);
+  write ('Y: '); readLn (Y);
+  write ('Z: '); readLn (Z);
+  W := mul3(X, Y, Z);
+  writeLn ('X*Y*Z=', W);
+  writeln;
+end.

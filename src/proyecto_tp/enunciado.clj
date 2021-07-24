@@ -64,6 +64,7 @@
 (declare aplicar-aritmetico)
 (declare aplicar-relacional)
 (declare dump)
+(declare procesar-propos-iden)
 
 (declare lista-palabras-reservadas)
 (declare vector-op-aritmeticas-diadicas)
@@ -136,7 +137,7 @@
 (defn escanear-arch [nom]
       (map #(let [aux (try (clojure.edn/read-string %) (catch Exception e (symbol %)))] (if (or (number? aux) (string? aux)) aux (symbol %)))
             (remove empty? (with-open [rdr (clojure.java.io/reader nom)]
-                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
+                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|MUL3|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
 )
 
 (defn listar
@@ -195,6 +196,7 @@
    21 "ENTRADA INVALIDA. INTENTE DE NUEVO!"
    22 "ARCHIVO NO ENCONTRADO"
    23 "COMANDO DESCONOCIDO"
+   24 "SE ESPERABA UNA COMA: ,"
    cod)
 )
 
@@ -470,8 +472,7 @@
                         valor (nth (last coincidencias) 2)]
                       (-> primera-fase
                           (procesar-terminal ,,, (symbol ":=") 8)
-                          (expresion)
-                          (generar ,,, 'POP valor)))
+                          (procesar-propos-iden ,,, valor)))
                   primera-fase))
           (case (simb-actual amb) 
                 CALL (-> amb
@@ -528,6 +529,27 @@
                          (generar ,,, 'NL))
             amb))
       amb)
+)
+
+(defn procesar-propos-iden [amb valor]
+  (if (= (estado amb) :sin-errores)
+    (case (simb-actual amb) 
+      MUL3 (-> amb
+              (escanear)
+              (procesar-terminal ,,, (symbol "(") 12)
+              (expresion)
+              (procesar-terminal ,,, (symbol ",") 24)
+              (expresion)
+              (procesar-terminal ,,, (symbol ",") 24)
+              (expresion)
+              (procesar-terminal ,,, (symbol ")") 13)
+              (generar ,,, 'MUL3)
+              (generar ,,, 'POP valor))
+
+      (-> amb
+          (expresion)
+          (generar ,,, 'POP valor)))
+    amb) 
 )
 
 (defn procesar-operador-relacional [amb]
@@ -699,6 +721,8 @@
           SUB (recur cod mem (inc cont-prg) (aplicar-aritmetico - pila-dat) pila-llam) 
         ; MUL: Reemplaza los dos valores ubicados en el tope de la pila de datos por su producto e incrementa el contador de programa
           MUL (recur cod mem (inc cont-prg) (aplicar-aritmetico * pila-dat) pila-llam)  
+        ; MUL3: Reemplaza los tres valores ubicados en el tope de la pila de datos por su producto e incrementa el contador de programa
+          MUL3 (recur cod mem (inc cont-prg) (aplicar-aritmetico * (aplicar-aritmetico * pila-dat)) pila-llam)  
         ; DIV: Reemplaza los dos valores ubicados en el tope de la pila de datos por su cociente entero e incrementa el contador de programa  
           DIV (recur cod mem (inc cont-prg) (aplicar-aritmetico / pila-dat) pila-llam)
           
@@ -1202,7 +1226,7 @@
 ; Lista de todas las palabras reserevadas en PL/0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def lista-palabras-reservadas 
-  '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE")
+  '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE" "MUL3")
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
