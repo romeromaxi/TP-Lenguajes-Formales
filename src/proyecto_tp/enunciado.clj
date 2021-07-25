@@ -64,6 +64,7 @@
 (declare aplicar-aritmetico)
 (declare aplicar-relacional)
 (declare dump)
+(declare aplicar-raiz)
 
 (declare lista-palabras-reservadas)
 (declare vector-op-aritmeticas-diadicas)
@@ -459,6 +460,22 @@
       amb)
 )
 
+(defn procesar-ident-propos [amb valor]
+  (if (= (estado amb) :sin-errores)
+      (if (= (simb-actual amb) 'SQRT)
+          (-> amb
+              (escanear)
+              (procesar-terminal ,,, (symbol "(") 12)
+              (expresion)
+              (procesar-terminal ,,, (symbol ")") 13)
+              (generar ,,, 'SQRT)
+              (generar ,,, 'POP valor))
+          (-> amb
+            (expresion)
+            (generar ,,, 'POP valor)))
+      amb)  
+)
+
 (defn proposicion [amb]
   (if (= (estado amb) :sin-errores)
       (if (identificador? (simb-actual amb))
@@ -470,8 +487,7 @@
                         valor (nth (last coincidencias) 2)]
                       (-> primera-fase
                           (procesar-terminal ,,, (symbol ":=") 8)
-                          (expresion)
-                          (generar ,,, 'POP valor)))
+                          (procesar-ident-propos ,,, valor)))
                   primera-fase))
           (case (simb-actual amb) 
                 CALL (-> amb
@@ -652,6 +668,7 @@
 ; SUB: Reemplaza los dos valores ubicados en el tope de la pila de datos por su resta e incrementa el contador de programa  
 ; MUL: Reemplaza los dos valores ubicados en el tope de la pila de datos por su producto e incrementa el contador de programa  
 ; DIV: Reemplaza los dos valores ubicados en el tope de la pila de datos por su cociente entero e incrementa el contador de programa  
+; SQRT: Reemplaza el valor ubicado en el tope de la pila de datos por su raiz cuadrada e incrementa el contador de programa  
 ;
 ; EQ : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son iguales (si no, por 0) e incrementa el contador de programa
 ; NEQ: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son distintos (si no, por 0) e incrementa el contador de programa
@@ -702,6 +719,8 @@
         ; DIV: Reemplaza los dos valores ubicados en el tope de la pila de datos por su cociente entero e incrementa el contador de programa  
           DIV (recur cod mem (inc cont-prg) (aplicar-aritmetico / pila-dat) pila-llam)
           
+          SQRT (recur cod mem (inc cont-prg) (aplicar-raiz pila-dat) pila-llam)
+
         ; EQ : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son iguales (si no, por 0) e incrementa el contador de programa
           EQ (recur cod mem (inc cont-prg) (aplicar-relacional = pila-dat) pila-llam)
         ; NEQ: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son distintos (si no, por 0) e incrementa el contador de programa
@@ -739,6 +758,10 @@
           RET (recur cod mem (last pila-llam) pila-dat (pop pila-llam))
        )
   )
+)
+
+(defn aplicar-raiz [pila]
+  (conj (pop pila) (int (Math/sqrt (nth pila (dec (count pila))))))  
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
