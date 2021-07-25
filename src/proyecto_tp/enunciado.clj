@@ -136,7 +136,7 @@
 (defn escanear-arch [nom]
       (map #(let [aux (try (clojure.edn/read-string %) (catch Exception e (symbol %)))] (if (or (number? aux) (string? aux)) aux (symbol %)))
             (remove empty? (with-open [rdr (clojure.java.io/reader nom)]
-                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
+                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|EVEN|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
 )
 
 (defn listar
@@ -551,20 +551,26 @@
 
 (defn condicion [amb]
   (if (= (estado amb) :sin-errores)
-      (if (= (simb-actual amb) 'ODD)
-          (-> amb
-              (escanear)
-              (expresion)
-              (generar ,,, 'ODD))
-          (let [primera-fase (-> amb
-                                 (expresion)
-                                 (procesar-operador-relacional)),
-                operador-relacional (last (simb-ya-parseados primera-fase))]
-               (if (= (estado primera-fase) :sin-errores)
-                   (-> primera-fase
-                       (expresion)
-                       (generar-operador-relacional ,,, operador-relacional))
-                   primera-fase)))
+      (case (simb-actual amb)
+        ODD (-> amb
+                (escanear)
+                (expresion)
+                (generar ,,, 'ODD))
+        EVEN (-> amb
+                (escanear)
+                (expresion)
+                (generar ,,, 'EVEN))
+
+        (let [primera-fase (-> amb
+                              (expresion)
+                              (procesar-operador-relacional)),
+                              operador-relacional (last (simb-ya-parseados primera-fase))]
+            (if (= (estado primera-fase) :sin-errores)
+            (-> primera-fase
+            (expresion)
+            (generar-operador-relacional ,,, operador-relacional))
+            primera-fase))
+        )
       amb)
 )
 
@@ -662,6 +668,7 @@
 ;
 ; NEG: Le cambia el signo al valor ubicado en el tope de la pila de datos e incrementa el contador de programa
 ; ODD: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es impar (si no, por 0) e incrementa el contador de programa
+; EVEN: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es par (si no, por 0) e incrementa el contador de programa
 ;
 ; JMP: Reemplaza el contador de programa por la direccion que forma parte de la instruccion
 ; JC : Saca un valor de la pila de datos y si es 0 incrementa el contador de programa (si no, reemplaza el contador de programa por la direccion que forma parte de la instruccion)
@@ -720,6 +727,9 @@
 
         ; ODD: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es impar (si no, por 0) e incrementa el contador de programa
           ODD (recur cod mem (inc cont-prg) (conj (pop pila-dat) (hash-map-boolean (odd? (last pila-dat)))) pila-llam)
+
+        ; EVEN: Reemplaza el valor ubicado en el tope de la pila de datos por 1 si este es par (si no, por 0) e incrementa el contador de programa
+          EVEN (recur cod mem (inc cont-prg) (conj (pop pila-dat) (hash-map-boolean (even? (last pila-dat)))) pila-llam)
 
         ; JMP: Reemplaza el contador de programa por la direccion que forma parte de la instruccion
           JMP (recur cod mem (second fetched) pila-dat pila-llam)
@@ -1202,7 +1212,7 @@
 ; Lista de todas las palabras reserevadas en PL/0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def lista-palabras-reservadas 
-  '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE")
+  '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "EVEN" "READLN" "WRITELN" "WRITE")
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

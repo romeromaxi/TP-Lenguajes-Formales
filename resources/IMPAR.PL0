@@ -1,0 +1,18 @@
+var X, Z;
+
+procedure IMPARMASCERCANO;
+begin
+     Z := X + 2;
+     if even Z then Z:= X + 1
+end;
+
+Begin
+  writeln ('************************************************************');
+  writeln ('Se ingresa un valor, se muestra el proximo impar.');
+  writeln ('************************************************************');
+
+  write ('X: '); readLn (X);
+  call IMPARMASCERCANO;
+  writeLn ('X= ', Z);
+  writeln;
+end.
