@@ -64,6 +64,7 @@
 (declare aplicar-aritmetico)
 (declare aplicar-relacional)
 (declare dump)
+(declare aplicar-raiz)
 
 (declare lista-palabras-reservadas)
 (declare vector-op-aritmeticas-diadicas)
@@ -136,7 +137,7 @@
 (defn escanear-arch [nom]
       (map #(let [aux (try (clojure.edn/read-string %) (catch Exception e (symbol %)))] (if (or (number? aux) (string? aux)) aux (symbol %)))
             (remove empty? (with-open [rdr (clojure.java.io/reader nom)]
-                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
+                                      (flatten (doall (map #(re-seq #"SQRT|CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
 )
 
 (defn listar
@@ -195,6 +196,7 @@
    21 "ENTRADA INVALIDA. INTENTE DE NUEVO!"
    22 "ARCHIVO NO ENCONTRADO"
    23 "COMANDO DESCONOCIDO"
+   24 "SE ESPERABA UNA COMA:  ,"
    cod)
 )
 
@@ -617,6 +619,12 @@
                                                (escanear)
                                                (expresion)
                                                (procesar-terminal ,,, (symbol ")") 13))
+        (= (simb-actual amb) 'SQRT) (-> amb
+                                       (escanear)
+                                       (procesar-terminal ,,, (symbol "(") 12)
+                                       (expresion)
+                                       (procesar-terminal ,,, (symbol ")") 13)
+                                       (generar ,,, 'SQRT))                                              
         :else (dar-error amb 15))
       amb)
 )
@@ -714,6 +722,8 @@
           LT (recur cod mem (inc cont-prg) (aplicar-relacional < pila-dat) pila-llam)
         ; LTE: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si el valor ubicado debajo del tope es menor o igual que el ubicado en el tope (si no, por 0) e incrementa el contador de programa
           LTE (recur cod mem (inc cont-prg) (aplicar-relacional <= pila-dat) pila-llam)
+          
+          SQRT (recur cod mem (inc cont-prg) (aplicar-raiz pila-dat) pila-llam)
         
         ; NEG: Le cambia el signo al valor ubicado en el tope de la pila de datos e incrementa el contador de programa
           NEG (recur cod mem (inc cont-prg) (conj (pop pila-dat) (- (last pila-dat))) pila-llam)
@@ -1032,6 +1042,10 @@
   )
 )
 
+(defn aplicar-raiz [pila]
+  (conj (pop pila) (int (Math/sqrt (nth pila (dec (count pila))))))
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Recibe un operador relacional de Clojure y un vector. Si el vector tiene mas de un elemento y si los dos
 ; ultimos elementos son numericos, devuelve el vector con los dos ultimos elementos reemplazados por el resultado de
@@ -1202,7 +1216,7 @@
 ; Lista de todas las palabras reserevadas en PL/0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def lista-palabras-reservadas 
-  '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE")
+  '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE" "SQRT")
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,0 +1,12 @@
+var X, Z;
+
+Begin
+  writeln ('************************************************************');
+  writeln ('Se ingresa un valor, se muestra su raíz cuadrada redondeada para abajo.');
+  writeln ('************************************************************');
+
+  write ('X: '); readLn (X);
+  Z := sqrt(X);
+  writeLn ('sqrt X= ', Z);
+  writeln;
+end.
