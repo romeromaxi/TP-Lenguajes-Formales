@@ -1,0 +1,11 @@
+var X, Y, Z;
+
+begin
+
+  write ('NUM='); readln (X);
+  write ('NUM='); readln (Y);
+  write ('NUM='); readln (Z);
+  
+  writeln ('X ? Y : Z ---> ', X ? Y : Z );
+  writeln
+end.

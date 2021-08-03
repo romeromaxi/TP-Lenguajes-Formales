@@ -85,6 +85,8 @@
 (declare es-operador-monadico-de-signo?)
 (declare es-operador-monadico-signo-negativo?)
 
+(declare procesas-ssp)
+
 (defn spy
    ([x] (do (prn x) x))
    ([msg x] (do (print msg) (print ": ") (prn x) x))
@@ -195,6 +197,7 @@
    21 "ENTRADA INVALIDA. INTENTE DE NUEVO!"
    22 "ARCHIVO NO ENCONTRADO"
    23 "COMANDO DESCONOCIDO"
+   24 "SE ESPERABA DOS PUNTOS: :"
    cod)
 )
 
@@ -581,6 +584,13 @@
                (termino)
                (generar ,,, 'SUB)
                (recur))
+         ? (-> amb
+               (escanear)
+               (termino)
+               (procesar-terminal ,,, (symbol ":") 24)
+               (termino)
+               (generar ,,, 'SSP)
+               (recur))              
          amb)
       amb)
 )
@@ -702,6 +712,8 @@
         ; DIV: Reemplaza los dos valores ubicados en el tope de la pila de datos por su cociente entero e incrementa el contador de programa  
           DIV (recur cod mem (inc cont-prg) (aplicar-aritmetico / pila-dat) pila-llam)
           
+          SSP (recur cod mem (inc cont-prg) (procesas-ssp pila-dat) pila-llam)
+
         ; EQ : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son iguales (si no, por 0) e incrementa el contador de programa
           EQ (recur cod mem (inc cont-prg) (aplicar-relacional = pila-dat) pila-llam)
         ; NEQ: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son distintos (si no, por 0) e incrementa el contador de programa
@@ -738,6 +750,18 @@
         ; RET: Saca una direccion de la pila de llamadas y la coloca en el contador de programa        
           RET (recur cod mem (last pila-llam) pila-dat (pop pila-llam))
        )
+  )
+)
+
+(defn procesas-ssp [pila]
+  (let [ consulta (last (pop (pop pila))),
+         primero (last (pop pila)),
+         segundo (last pila)]
+    
+      (if (pos? consulta)
+        (conj (pop (pop (pop pila))) primero)
+        (conj (pop (pop (pop pila))) segundo)        
+      )
   )
 )
 
