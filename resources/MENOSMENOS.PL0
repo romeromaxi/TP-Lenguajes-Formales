@@ -1,0 +1,8 @@
+var Y;
+
+begin
+  write ('NUM='); readln (Y);
+  --Y;
+  writeln ('--Y=', Y);
+  writeln
+end.
