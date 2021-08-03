@@ -1,0 +1,9 @@
+var X;
+
+begin
+
+  write ('NUM='); readln (X);
+  **X;
+  writeln ('**X=', X);
+  writeln
+end.

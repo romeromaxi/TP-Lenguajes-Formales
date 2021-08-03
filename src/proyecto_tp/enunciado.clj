@@ -85,6 +85,8 @@
 (declare es-operador-monadico-de-signo?)
 (declare es-operador-monadico-signo-negativo?)
 
+(declare procesas-mul-mul)
+
 (defn spy
    ([x] (do (prn x) x))
    ([msg x] (do (print msg) (print ": ") (prn x) x))
@@ -136,7 +138,7 @@
 (defn escanear-arch [nom]
       (map #(let [aux (try (clojure.edn/read-string %) (catch Exception e (symbol %)))] (if (or (number? aux) (string? aux)) aux (symbol %)))
             (remove empty? (with-open [rdr (clojure.java.io/reader nom)]
-                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
+                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*\*|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
 )
 
 (defn listar
@@ -526,8 +528,27 @@
                          (escanear)
                          (procesar-writeln)
                          (generar ,,, 'NL))
+
+                  ** (-> amb
+                         (escanear)
+                         (procesar-terminal ,,, identificador? 5)
+                         (procesas-mul-mul))
             amb))
       amb)
+)
+
+(defn procesas-mul-mul [amb]
+  (if (= (estado amb) :sin-errores)
+    (let [ coincidencias (buscar-coincidencias amb),
+           valor (nth (last coincidencias) 2)]
+        (-> amb
+            (generar ,,, 'PFM valor)
+            (generar ,,, 'PFI 2)
+            (generar ,,, 'MUL)
+            (generar ,,, 'POP valor)
+            )     
+      )
+    amb)  
 )
 
 (defn procesar-operador-relacional [amb]
