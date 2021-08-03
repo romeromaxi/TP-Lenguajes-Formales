@@ -85,6 +85,8 @@
 (declare es-operador-monadico-de-signo?)
 (declare es-operador-monadico-signo-negativo?)
 
+(declare aplicar-aritmetico-pow)
+
 (defn spy
    ([x] (do (prn x) x))
    ([msg x] (do (print msg) (print ": ") (prn x) x))
@@ -136,7 +138,7 @@
 (defn escanear-arch [nom]
       (map #(let [aux (try (clojure.edn/read-string %) (catch Exception e (symbol %)))] (if (or (number? aux) (string? aux)) aux (symbol %)))
             (remove empty? (with-open [rdr (clojure.java.io/reader nom)]
-                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
+                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*\*|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
 )
 
 (defn listar
@@ -581,6 +583,11 @@
                (termino)
                (generar ,,, 'SUB)
                (recur))
+        ** (-> amb
+                (escanear)
+                (termino)
+                (generar ,,, 'POW)
+                (recur))
          amb)
       amb)
 )
@@ -702,6 +709,9 @@
         ; DIV: Reemplaza los dos valores ubicados en el tope de la pila de datos por su cociente entero e incrementa el contador de programa  
           DIV (recur cod mem (inc cont-prg) (aplicar-aritmetico / pila-dat) pila-llam)
           
+        ; POW: Reemplaza los dos valores ubicados en el tope de la pila de datos por el primero elevado al segundo entero e incrementa el contador de programa  
+          POW (recur cod mem (inc cont-prg) (aplicar-aritmetico-pow pila-dat) pila-llam)
+
         ; EQ : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son iguales (si no, por 0) e incrementa el contador de programa
           EQ (recur cod mem (inc cont-prg) (aplicar-relacional = pila-dat) pila-llam)
         ; NEQ: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son distintos (si no, por 0) e incrementa el contador de programa
@@ -1029,6 +1039,19 @@
     (not (ultimos-dos-elementos-numericos? pila)) pila
     (not (es-operador-aritmetico-diadico? op)) pila
     :else (conj (pop (pop pila)) (int (op (nth pila (- (count pila) 2)) (nth pila (dec (count pila))))))
+  )
+)
+
+(defn exponente [base pot]
+    (reduce * (repeat pot base))
+)
+
+(defn aplicar-aritmetico-pow [pila]
+  (cond
+    (not (vector? pila)) pila
+    (< (count pila) 2) pila
+    (not (ultimos-dos-elementos-numericos? pila)) pila
+    :else (conj (pop (pop pila)) (int (exponente (nth pila (- (count pila) 2)) (nth pila (dec (count pila))))) )
   )
 )
 
