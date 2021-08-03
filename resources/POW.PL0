@@ -1,0 +1,9 @@
+var X, Y;
+
+begin
+
+  write ('NUM='); readln (X);
+  write ('NUM='); readln (Y);
+  writeln ('X^Y=', POW(X, Y) );
+  writeln
+end.

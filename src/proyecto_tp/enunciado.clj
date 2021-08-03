@@ -85,6 +85,8 @@
 (declare es-operador-monadico-de-signo?)
 (declare es-operador-monadico-signo-negativo?)
 
+(declare aplicar-pow)
+
 (defn spy
    ([x] (do (prn x) x))
    ([msg x] (do (print msg) (print ": ") (prn x) x))
@@ -136,7 +138,7 @@
 (defn escanear-arch [nom]
       (map #(let [aux (try (clojure.edn/read-string %) (catch Exception e (symbol %)))] (if (or (number? aux) (string? aux)) aux (symbol %)))
             (remove empty? (with-open [rdr (clojure.java.io/reader nom)]
-                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
+                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|POW|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
 )
 
 (defn listar
@@ -195,6 +197,7 @@
    21 "ENTRADA INVALIDA. INTENTE DE NUEVO!"
    22 "ARCHIVO NO ENCONTRADO"
    23 "COMANDO DESCONOCIDO"
+   24 "SE ESPERABA UNA COMA: ,"
    cod)
 )
 
@@ -617,6 +620,15 @@
                                                (escanear)
                                                (expresion)
                                                (procesar-terminal ,,, (symbol ")") 13))
+         
+        (= (simb-actual amb) 'POW) (-> amb
+                                      (escanear)
+                                      (procesar-terminal ,,, (symbol "(") 12)
+                                      (expresion)
+                                      (procesar-terminal ,,, (symbol ",") 24)
+                                      (expresion)
+                                      (procesar-terminal ,,, (symbol ")") 13)
+                                      (generar ,,, 'POW))                                               
         :else (dar-error amb 15))
       amb)
 )
@@ -701,7 +713,10 @@
           MUL (recur cod mem (inc cont-prg) (aplicar-aritmetico * pila-dat) pila-llam)  
         ; DIV: Reemplaza los dos valores ubicados en el tope de la pila de datos por su cociente entero e incrementa el contador de programa  
           DIV (recur cod mem (inc cont-prg) (aplicar-aritmetico / pila-dat) pila-llam)
-          
+
+        ; POW 
+          POW (recur cod mem (inc cont-prg) (aplicar-pow pila-dat) pila-llam)
+      
         ; EQ : Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son iguales (si no, por 0) e incrementa el contador de programa
           EQ (recur cod mem (inc cont-prg) (aplicar-relacional = pila-dat) pila-llam)
         ; NEQ: Reemplaza los dos valores ubicados en el tope de la pila de datos por 1 si son distintos (si no, por 0) e incrementa el contador de programa
@@ -738,6 +753,15 @@
         ; RET: Saca una direccion de la pila de llamadas y la coloca en el contador de programa        
           RET (recur cod mem (last pila-llam) pila-dat (pop pila-llam))
        )
+  )
+)
+
+(defn aplicar-pow [pila]
+  (cond
+    (not (vector? pila)) pila
+    (< (count pila) 2) pila
+    (not (ultimos-dos-elementos-numericos? pila)) pila
+    :else (conj (pop (pop pila)) (int (reduce * (repeat (nth pila (dec (count pila))) (nth pila (- (count pila) 2)) )) ))  
   )
 )
 
@@ -1202,7 +1226,7 @@
 ; Lista de todas las palabras reserevadas en PL/0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def lista-palabras-reservadas 
-  '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE")
+  '("CONST" "VAR" "PROCEDURE" "CALL" "BEGIN" "END" "IF" "THEN" "WHILE" "DO" "ODD" "READLN" "WRITELN" "WRITE" "POW")
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
