@@ -583,11 +583,6 @@
                (termino)
                (generar ,,, 'SUB)
                (recur))
-        ** (-> amb
-                (escanear)
-                (termino)
-                (generar ,,, 'POW)
-                (recur))
          amb)
       amb)
 )
@@ -605,6 +600,11 @@
                (factor)
                (generar ,,, 'DIV)
                (recur))
+        ** (-> amb
+               (escanear)
+               (factor)
+               (generar ,,, 'POW)
+               (recur))      
          amb)
       amb)
 )
