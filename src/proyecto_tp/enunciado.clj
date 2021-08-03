@@ -85,6 +85,8 @@
 (declare es-operador-monadico-de-signo?)
 (declare es-operador-monadico-signo-negativo?)
 
+(declare procesas-masmas)
+
 (defn spy
    ([x] (do (prn x) x))
    ([msg x] (do (print msg) (print ": ") (prn x) x))
@@ -136,7 +138,7 @@
 (defn escanear-arch [nom]
       (map #(let [aux (try (clojure.edn/read-string %) (catch Exception e (symbol %)))] (if (or (number? aux) (string? aux)) aux (symbol %)))
             (remove empty? (with-open [rdr (clojure.java.io/reader nom)]
-                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
+                                      (flatten (doall (map #(re-seq #"CONST|VAR|PROCEDURE|CALL|BEGIN|END|IF|THEN|WHILE|DO|ODD|READLN|WRITELN|WRITE|\<\=|\>\=|\<\>|\<|\>|\=|\:\=|\(|\)|\.|\,|\;|\+\+|\+|\-|\*|\/|\'[^\']*\'|\d+|[A-Z][A-Z0-9]*|\!|\"|\#|\$|\%|\&|\'|\@|\?|\^|\:|\[|\\|\]|\_|\{|\||\}|\~" (a-mayusculas-salvo-strings %)) (line-seq rdr)))))))
 )
 
 (defn listar
@@ -522,6 +524,19 @@
                          (escribir-cadena-o-expresion)
                          (escribir-mas-cadenas-o-expresiones)
                          (procesar-terminal ,,, (symbol ")") 13))
+                  ++ (let [primera-fase (-> amb
+                                            (escanear)
+                                            (procesar-terminal ,,, identificador? 5))]
+                          (if (= (estado primera-fase) :sin-errores)
+                            (let [coincidencias (buscar-coincidencias primera-fase),
+                                  valor (nth (last coincidencias) 2)]
+                                (-> primera-fase
+                                    (generar ,,, 'PFM valor)
+                                    (generar ,,, 'PFI 1)
+                                    (generar ,,, 'ADD)
+                                    (generar ,,, 'POP valor)
+                                    ))
+                            primera-fase))
              WRITELN (-> amb
                          (escanear)
                          (procesar-writeln)
