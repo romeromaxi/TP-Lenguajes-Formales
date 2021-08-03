@@ -524,25 +524,30 @@
                          (escribir-cadena-o-expresion)
                          (escribir-mas-cadenas-o-expresiones)
                          (procesar-terminal ,,, (symbol ")") 13))
-                  ++ (let [primera-fase (-> amb
-                                            (escanear)
-                                            (procesar-terminal ,,, identificador? 5))]
-                          (if (= (estado primera-fase) :sin-errores)
-                            (let [coincidencias (buscar-coincidencias primera-fase),
-                                  valor (nth (last coincidencias) 2)]
-                                (-> primera-fase
-                                    (generar ,,, 'PFM valor)
-                                    (generar ,,, 'PFI 1)
-                                    (generar ,,, 'ADD)
-                                    (generar ,,, 'POP valor)
-                                    ))
-                            primera-fase))
+                  ++ (-> amb
+                          (escanear)
+                          (procesar-terminal ,,, identificador? 5)
+                          (procesas-masmas))
+
              WRITELN (-> amb
                          (escanear)
                          (procesar-writeln)
                          (generar ,,, 'NL))
             amb))
       amb)
+)
+
+(defn procesas-masmas [amb]
+  (if (= (estado amb) :sin-errores)
+  (let [coincidencias (buscar-coincidencias amb),
+        valor (nth (last coincidencias) 2)]
+      (-> amb
+          (generar ,,, 'PFM valor)
+          (generar ,,, 'PFI 1)
+          (generar ,,, 'ADD)
+          (generar ,,, 'POP valor)
+          ))
+    amb)  
 )
 
 (defn procesar-operador-relacional [amb]
