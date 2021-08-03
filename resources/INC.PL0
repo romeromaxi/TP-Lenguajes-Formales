@@ -1,0 +1,9 @@
+var X;
+
+begin
+
+  write ('NUM='); readln (X);
+  INC (X);
+  writeln ('INC(X)=', X);
+  writeln
+end.
