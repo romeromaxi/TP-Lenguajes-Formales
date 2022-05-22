@@ -1,6 +1,6 @@
 # TP Lenguajes Formales
 
-Repositorio del trabajo práctico para la materia 75.14 Lenguajes Formales - FIUBA.
+Repositorio del trabajo práctico para la materia 75.14 Lenguajes Formales 1C2021 - FIUBA.
 
 
 El proyecto de Clojure se creó usando Leiningen para Windows ([Instalación Leiningen](#https://github.com/technomancy/leiningen/blob/stable/README.md))
